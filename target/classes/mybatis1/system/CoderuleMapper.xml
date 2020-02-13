@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CoderuleMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_codeRuleSet
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		codeRuleId,
+		explain,
+		tableName,
+		fieldName,	
+		codeRuleType,	
+		prefix,	
+		serialNumLength,
+		nowDate,
+		seq_one,
+		seq_two,
+		seq_three,
+		createUser,
+		createTime,
+		updateUser,
+		updateTime,
+		autoCreateTime
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{codeRuleId},	
+		#{explain},	
+		#{tableName},	
+		#{fieldName},	
+		#{codeRuleType},	
+		#{prefix},	
+		#{serialNumLength},	
+		#{nowDate},
+		#{seq_one},
+		#{seq_two},
+		#{seq_three},
+		#{createUser},
+		#{createTime},
+		#{updateUser},
+		#{updateTime},
+		#{autoCreateTime}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+				codeRuleId,
+				explain,
+				tableName,
+				fieldName,	
+				codeRuleType,	
+				prefix,	
+				serialNumLength,
+				seq_one,
+				seq_two,
+				seq_three,
+				createUser,
+				createTime
+		) values (
+				#{codeRuleId},	
+				#{explain},	
+				#{tableName},	
+				#{fieldName},	
+				#{codeRuleType},	
+				#{prefix},	
+				#{serialNumLength},
+				#{seq_one},
+				#{seq_two},
+				#{seq_three},
+				#{createUser},
+				#{createTime}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			codeRuleId = #{codeRuleId}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			explain = #{explain},
+			tableName = #{tableName},
+			fieldName = #{fieldName},
+			codeRuleType = #{codeRuleType},
+			prefix = #{prefix},
+			serialNumLength = #{serialNumLength},
+			updateUser = #{updateUser},
+			updateTime = #{updateTime}
+		where 
+			codeRuleId = #{codeRuleId}
+	</update>
+	
+	<!-- 编码规则2修改 -->
+	<update id="editTwoType" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			seq_two = #{seq_two}
+		where 
+			codeRuleId = #{codeRuleId}
+	</update>
+	<!-- 编码规则3修改 -->
+	<update id="editThreeType" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			seq_three = #{seq_three}
+		where 
+			codeRuleId = #{codeRuleId}
+	</update>
+	
+	<!-- 编码规则3修改时间 -->
+	<update id="editThreeTime" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			nowDate=#{nowDate},
+			seq_three=#{seq_three}
+		where 
+			codeRuleId = #{codeRuleId}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			codeRuleId = #{codeRuleId}
+	</select>
+	
+	<!-- 通过表名和字段名获取获取数据 -->
+	<select id="findByTabAndFie" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			tableName = #{tableName} and fieldName=#{fieldName}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+		and
+			(
+				tableName LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				 or 
+				fieldName LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				 or 
+				explain LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+			)
+				
+		</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="querylistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+		<choose>
+			<when test="pd.isAccurateQuery!= null and pd.isAccurateQuery != '' and pd.isAccurateQuery=='true'">
+				<if test="pd.explain!= null and pd.explain != ''">
+					and explain=#{pd.explain}
+				</if>
+				<if test="pd.tableName!= null and pd.tableName != ''">
+					and tableName=#{pd.tableName}
+				</if>
+				<if test="pd.fieldName!= null and pd.fieldName != ''">
+					and fieldName=#{pd.fieldName}
+				</if>
+				<if test="pd.prefix!= null and pd.prefix != ''">
+					and prefix=#{pd.prefix}
+				</if>
+			</when>
+			<otherwise >
+				 <if test="pd.explain!= null and pd.explain != ''">
+					and explain LIKE CONCAT(CONCAT('%', #{pd.explain}),'%')
+				</if>
+				<if test="pd.tableName!= null and pd.tableName != ''">
+					and tableName LIKE CONCAT(CONCAT('%', #{pd.tableName}),'%')
+				</if>
+				<if test="pd.fieldName!= null and pd.fieldName != ''">
+					and fieldName  LIKE CONCAT(CONCAT('%', #{pd.fieldName}),'%')
+				</if>
+				<if test="pd.prefix!= null and pd.prefix != ''">
+					and prefix  LIKE CONCAT(CONCAT('%', #{pd.prefix}),'%')
+				</if>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			codeRuleId in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

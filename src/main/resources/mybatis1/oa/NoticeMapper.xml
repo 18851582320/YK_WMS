@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="NoticeMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		OA_companyNotice
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		noticeId,
+		noticeTitle,
+		noticeContent,
+		createUser,	
+		createTime,
+		isStop,
+		endTime
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{noticeId},	
+		#{noticeTitle},	
+		#{noticeContent},	
+		#{createUser},	
+		#{createTime},	
+		#{isStop},
+		#{endTime}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+		<include refid="tableName"></include>
+		(
+			noticeId,
+			noticeTitle,
+			noticeContent,
+			createUser,	
+			createTime,
+			isStop,
+			endTime
+		) values 
+		(
+			#{noticeId},	
+			#{noticeTitle},	
+			#{noticeContent},	
+			#{createUser},	
+			#{createTime},	
+			#{isStop},
+			#{endTime}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			noticeId = #{noticeId}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			noticeTitle = #{noticeTitle},
+			noticeContent = #{noticeContent},
+			endTime = #{endTime},
+			isStop = #{isStop}
+		where 
+			noticeId = #{noticeId}
+	</update>
+	
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			a.noticeId,
+			a.noticeTitle,
+			a.noticeContent,
+			a.createUser,	
+			a.createTime,
+			a.isStop,
+			a.endTime,
+			b.Name as createUserName
+		from 
+		<include refid="tableName"></include> a
+		left join OA_STAFF b on a.createUser=b.STAFF_ID
+		where 
+			a.noticeId = #{noticeId}
+	</select>
+	
+	
+	
+	
+	<!-- 列表 -->
+	<select id="querylistPage" parameterType="page" resultType="pd">
+		select 
+			a.noticeId,
+			a.noticeTitle,
+			a.noticeContent,
+			a.createUser,	
+			a.createTime,
+			a.isStop,
+			a.endTime,
+			b.Name as createUserName
+		from 
+		<include refid="tableName"></include> a
+		left join OA_STAFF b on a.createUser=b.STAFF_ID
+		where 1=1
+		<!-- <choose>
+			<when test="pd.isAccurateQuery!= null and pd.isAccurateQuery != '' and pd.isAccurateQuery=='true'">
+				<if test="pd.noticeTitle!= null and pd.noticeTitle != ''">
+					and a.noticeTitle=#{pd.noticeTitle}
+				</if>
+				<if test="pd.noticeContent!= null and pd.noticeContent != ''">
+					and a.noticeContent=#{pd.noticeContent}
+				</if>
+				<if test="pd.createUserName!= null and pd.createUserName != ''">
+					and b.NAME=#{pd.createUserName}
+				</if>
+				<if test="pd.isStop!= null and pd.isStop != ''">
+					and a.isStop=#{pd.isStop}
+				</if>
+				<if test="pd.createTime!= null and pd.createTime != ''">
+					and a.createTime &gt; =#{pd.createTime}
+				</if>
+				<if test="pd.createTime2!= null and pd.createTime2 != ''">
+					and a.createTime &lt; =#{pd.createTime2}
+				</if>
+				<if test="pd.endTime!= null and pd.endTime != ''">
+					and a.endTime &gt; =#{pd.endTime}
+				</if>
+				<if test="pd.endTime2!= null and pd.endTime2 != ''">
+					and a.endTime &lt; =#{pd.endTime2}
+				</if>
+			</when>
+			<otherwise >
+				 <if test="pd.noticeTitle!= null and pd.noticeTitle != ''">
+					and a.noticeTitle LIKE CONCAT(CONCAT('%', #{pd.noticeTitle}),'%')
+				</if>
+				<if test="pd.noticeContent!= null and pd.noticeContent != ''">
+					and a.noticeContent LIKE CONCAT(CONCAT('%', #{pd.noticeContent}),'%')
+				</if>
+				<if test="pd.createUserName!= null and pd.createUserName != ''">
+					and b.NAME  LIKE CONCAT(CONCAT('%', #{pd.createUserName}),'%')
+				</if>
+				<if test="pd.isStop!= null and pd.isStop != ''">
+					and a.isStop=#{pd.isStop}
+				</if>
+				<if test="pd.createTime!= null and pd.createTime != ''">
+					and a.createTime &gt; =#{pd.createTime}
+				</if>
+				<if test="pd.createTime2!= null and pd.createTime2 != ''">
+					and a.createTime &lt; =#{pd.createTime2}
+				</if>
+				<if test="pd.endTime!= null and pd.endTime != ''">
+					and a.endTime &gt; =#{pd.endTime}
+				</if>
+				<if test="pd.endTime2!= null and pd.endTime2 != ''">
+					and a.endTime &lt; =#{pd.endTime2}
+				</if>
+			</otherwise>
+		</choose> -->
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select 
+			a.noticeId,
+			a.noticeTitle,
+			a.noticeContent,
+			a.createUser,	
+			a.createTime,
+			a.isStop,
+			a.endTime,
+			b.Name as createUserName
+		from 
+		<include refid="tableName"></include> a
+		left join OA_STAFF b on a.createUser=b.STAFF_ID
+		where 1=1
+		<choose>
+			<when test="isAccurateQuery!= null and isAccurateQuery != '' and isAccurateQuery=='true'">
+				<if test="noticeTitle!= null and noticeTitle != ''">
+					and a.noticeTitle=#{noticeTitle}
+				</if>
+				<if test="noticeContent!= null and noticeContent != ''">
+					and a.noticeContent=#{noticeContent}
+				</if>
+				<if test="createUserName!= null and createUserName != ''">
+					and b.NAME=#{createUserName}
+				</if>
+				<if test="isStop!= null and isStop != ''">
+					and a.isStop=#{isStop}
+				</if>
+				<if test="createTime!= null and createTime != ''">
+					and a.createTime &gt; =#{createTime}
+				</if>
+				<if test="createTime2!= null and createTime2 != ''">
+					and a.createTime &lt; =#{createTime2}
+				</if>
+				<if test="endTime!= null and endTime != ''">
+					and a.endTime &gt; =#{endTime}
+				</if>
+				<if test="endTime2!= null and endTime2 != ''">
+					and a.endTime &lt; =#{pd.endTime2}
+				</if>
+			</when>
+			<otherwise >
+				 <if test="noticeTitle!= null and noticeTitle != ''">
+					and a.noticeTitle LIKE CONCAT(CONCAT('%', #{noticeTitle}),'%')
+				</if>
+				<if test="noticeContent!= null and noticeContent != ''">
+					and a.noticeContent LIKE CONCAT(CONCAT('%', #{noticeContent}),'%')
+				</if>
+				<if test="createUserName!= null and createUserName != ''">
+					and b.NAME  LIKE CONCAT(CONCAT('%', #{createUserName}),'%')
+				</if>
+				<if test="isStop!= null and isStop != ''">
+					and a.isStop=#{isStop}
+				</if>
+				<if test="createTime!= null and createTime != ''">
+					and a.createTime &gt; =#{createTime}
+				</if>
+				<if test="createTime2!= null and createTime2 != ''">
+					and a.createTime &lt; =#{createTime2}
+				</if>
+				<if test="endTime!= null and endTime != ''">
+					and a.endTime &gt; =#{endTime}
+				</if>
+				<if test="endTime2!= null and endTime2 != ''">
+					and a.endTime &lt; =#{endTime2}
+				</if>
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			noticeId in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

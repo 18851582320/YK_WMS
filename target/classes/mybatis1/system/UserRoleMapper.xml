@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserRoleMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_userRole
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		userRoleId,
+		userId,
+		roleId
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{userRoleId},	
+		#{userId},	
+		#{roleId}	
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+		<include refid="tableName"></include>
+		(
+			userRoleId,
+			userId,
+			roleId
+		) values 
+		(
+			#{userRoleId},	
+			#{userId},	
+			#{roleId}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			userRoleId = #{userRoleId}
+	</delete>
+	
+	<!-- 删除-->
+	<delete id="deleteByUserId" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			userId = #{userId}
+	</delete>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			userRoleId,
+			userId,
+			roleId
+		from 
+		<include refid="tableName"></include> a
+		where 1=1 userRoleId=#{userRoleId}
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select 
+			userRoleId,
+			userId,
+			roleId
+		from 
+		<include refid="tableName"></include>a
+		where 1=1
+	</select>
+	
+	
+	<!-- 列表通过用户信息查询 -->
+	<select id="listAllByUserId" parameterType="pd" resultType="pd">
+		select 
+			a.userRoleId,
+			a.userId,
+			a.roleId,
+			b.ROLE_NAME,
+			b.RIGHTS,
+			b.PARENT_ID,
+			b.ADD_QX,
+			b.DEL_QX,
+			b.EDIT_QX,
+			b.CHA_QX,
+			b.IMPORT_QX,
+			b.EXPORT_QX,
+			b.RNUMBER
+		from 
+		<include refid="tableName"></include>a
+		inner join sys_role b on a.roleId=b.ROLE_ID
+		where 1=1 and a.userId=#{userId}
+	</select>
+	
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			userRoleId in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	
+	<!-- 批量删除 -->
+	<delete id="deleteByStaffId" parameterType="String">
+		delete a from
+		<include refid="tableName"></include> a
+		inner join sys_user b on a.userId=b.USER_ID
+		inner join OA_STAFF c on b.USER_ID=c.USER_ID
+		where 
+			c.STAFF_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FolderDocMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		WD_folderDoc
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		folderDocId,
+		folderDocName,
+		folderDocRealName,
+		folderDocVersion,
+		folderDocMemo,
+		folderId,
+		createUser,
+		createTime,
+		updateUser,
+		updateTime,
+		autoCreateTime
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{folderDocId},
+		#{folderDocName},
+		#{folderDocRealName},
+		#{folderDocVersion},
+		#{folderDocMemo},	
+		#{folderId},		
+		#{createUser},	
+		#{createTime},
+		#{updateUser},
+		#{updateTime},
+		#{autoCreateTime}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+			folderDocId,
+			folderDocName,
+			folderDocRealName,
+			folderDocVersion,
+			folderDocMemo,
+			folderId,
+			createUser,
+			createTime
+		) values (
+			#{folderDocId},
+			#{folderDocName},
+			#{folderDocRealName},
+			#{folderDocVersion},
+			#{folderDocMemo},	
+			#{folderId},		
+			#{createUser},	
+			#{createTime}
+		)
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			folderDocName = #{folderDocName},
+			folderDocRealName = #{folderDocRealName},
+			folderDocMemo = #{folderDocMemo},	
+			updateUser = #{updateUser},
+			updateTime = #{updateTime}
+		where 
+			folderDocId = #{folderDocId}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		a.folderDocId,
+		a.folderDocName,
+		a.folderDocRealName,
+		a.folderDocVersion,
+		a.folderDocMemo,
+		a.folderId,
+		a.createUser,
+		a.createTime,
+		a.updateUser,
+		a.updateTime,
+		a.autoCreateTime,
+		b.Name as createUserName,
+		c.Name as updateUserName,
+		d.folderName
+		from WD_folderDoc a
+		left join OA_STAFF b on a.createUser=b.STAFF_ID
+		left join OA_STAFF c on a.updateUser=c.STAFF_ID
+		left join WD_folder d on a.folderId=d.folderId
+		where a.folderDocId = #{folderDocId}
+	</select>
+	
+	
+	<!-- 获取最大id -->
+	<select id="findMaxId" parameterType="pd" resultType="pd">
+		select isnull(MAX(folderDocVersion),0) as folderDocVersion 
+		from WD_folderDoc 
+		where folderDocName=#{folderDocName} and folderId=#{folderId}
+	</select>
+	
+	
+	<!-- -->
+	<select id="querylistPage" parameterType="page" resultType="pd" >
+		select 
+		a.folderDocId,
+		a.folderDocName,
+		a.folderDocRealName,
+		a.folderDocVersion,
+		a.folderDocMemo,
+		a.folderId,
+		a.createUser,
+		a.createTime,
+		a.updateUser,
+		a.updateTime,
+		a.autoCreateTime,
+		b.Name as createUserName,
+		c.Name as updateUserName,
+		d.folderName
+		from WD_folderDoc a
+		left join OA_STAFF b on a.createUser=b.STAFF_ID
+		left join OA_STAFF c on a.updateUser=c.STAFF_ID
+		left join WD_folder d on a.folderId=d.folderId
+		where 1=1
+		<if test="pd.folderId!= null and pd.folderId != ''">
+			and a.folderId=#{pd.folderId}
+		</if>
+		<choose>
+			<when test="pd.isAccurateQuery!= null and pd.isAccurateQuery != '' and pd.isAccurateQuery=='true'">
+				<if test="pd.folderDocName!= null and pd.folderDocName != ''">
+					and a.folderDocName=#{pd.folderDocName}
+				</if>
+				<if test="pd.folderDocMemo!= null and pd.folderDocMemo != ''">
+					and a.folderDocMemo=#{pd.folderDocMemo}
+				</if>
+				<if test="pd.createUserName!= null and pd.createUserName != ''">
+					and c.NAME=#{pd.createUserName}
+				</if>
+				<if test="pd.createTime!= null and pd.createTime != ''">
+					and a.createTime &gt; =#{pd.createTime}
+				</if>
+				<if test="pd.createTime2!= null and pd.createTime2 != ''">
+					and a.createTime &lt; =#{pd.createTime2}
+				</if>
+				<if test="pd.updateUserName!= null and pd.updateUserName != ''">
+					and d.NAME=#{pd.updateUserName}
+				</if>
+				<if test="pd.updateTime!= null and pd.updateTime != ''">
+					and a.updateTime &gt; =#{pd.updateTime}
+				</if>
+				<if test="pd.updateTime2!= null and pd.updateTime2 != ''">
+					and a.updateTime &lt; =#{pd.updateTime2}
+				</if>
+			</when>
+			<otherwise >
+				 <if test="pd.folderDocName!= null and pd.folderDocName != ''">
+					and a.folderDocName LIKE CONCAT(CONCAT('%', #{pd.folderDocName}),'%')
+				</if>
+				<if test="pd.folderDocMemo!= null and pd.folderDocMemo != ''">
+					and a.folderDocMemo LIKE CONCAT(CONCAT('%', #{pd.folderDocMemo}),'%')
+				</if>
+				<if test="pd.createUserName!= null and pd.createUserName != ''">
+					and c.NAME  LIKE CONCAT(CONCAT('%', #{pd.createUserName}),'%')
+				</if>
+				<if test="pd.createTime!= null and pd.createTime != ''">
+					and a.createTime &gt; =#{pd.createTime}
+				</if>
+				<if test="pd.createTime2!= null and pd.createTime2 != ''">
+					and a.createTime &lt; =#{pd.createTime2}
+				</if>
+				<if test="pd.updateUserName!= null and pd.updateUserName != ''">
+					and d.NAME  LIKE CONCAT(CONCAT('%', #{pd.updateUserName}),'%')
+				</if>
+				<if test="pd.updateTime!= null and pd.updateTime != ''">
+					and a.updateTime &gt; =#{pd.updateTime}
+				</if>
+				<if test="pd.updateTime2!= null and pd.updateTime2 != ''">
+					and a.updateTime &lt; =#{pd.updateTime2}
+				</if>
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="listByFolderAndName" parameterType="pd" resultType="pd">
+		select 
+		a.folderDocId,
+		a.folderDocName,
+		a.folderDocRealName,
+		a.folderDocVersion,
+		a.folderDocMemo,
+		a.folderId,
+		a.createUser,
+		a.createTime,
+		a.updateUser,
+		a.updateTime,
+		a.autoCreateTime
+		from WD_folderDoc a
+		where a.folderId = #{folderId} and a.folderDocName=#{folderDocName}
+	</select>
+	
+	<select id="listByFolderIds" parameterType="String" resultType="pd">
+		select 
+		a.folderDocId,
+		a.folderDocName,
+		a.folderDocRealName,
+		a.folderDocVersion,
+		a.folderDocMemo,
+		a.folderId,
+		a.createUser,
+		a.createTime,
+		a.updateUser,
+		a.updateTime,
+		a.autoCreateTime
+		from WD_folderDoc a
+		where a.folderDocId  in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</select>
+	
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			folderDocId in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

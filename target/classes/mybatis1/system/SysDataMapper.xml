@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysDataMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_sysData
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		sysDataId,
+		sysDataIndex,
+		sysDataTableName,
+		sysDataDescribe	
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{sysDataId},	
+		#{sysDataIndex},	
+		#{sysDataTableName},	
+		#{sysDataDescribe}	
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+			sysDataIndex,
+			sysDataTableName,
+			sysDataDescribe	
+				
+		) values (
+			#{sysDataIndex},	
+			#{sysDataTableName},	
+			#{sysDataDescribe}	
+		)
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			sysDataIndex = #{sysDataIndex},
+			sysDataTableName = #{sysDataTableName},
+			sysDataDescribe = #{sysDataDescribe}
+		where 
+			sysDataId = #{sysDataId}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			sysDataId = #{sysDataId}
+	</select>
+	
+	<select id="findByIndex" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			sysDataIndex = #{sysDataIndex}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="querylistPage" parameterType="page" resultType="pd" >
+		select
+		a.sysDataId,
+		a.sysDataIndex,
+		a.sysDataTableName,
+		a.sysDataDescribe	
+		from SYS_sysData a
+		where 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					a.sysDataIndex LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					or 
+					a.sysDataTableName LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					or 
+					a.sysDataDescribe LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+	</select>
+	
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			sysDataIndex in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

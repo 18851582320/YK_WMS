@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysDataSetMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_dataSet
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		dataSetId,
+		dataSetTypeCode,
+		dataSetValue,
+		dataSetMemo,
+		autoCreateTime
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{dataSetId},	
+		#{dataSetTypeCode},	
+		#{dataSetValue},	
+		#{dataSetMemo},	
+		#{autoCreateTime}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+		<include refid="tableName"></include>
+		(
+			dataSetId,
+			dataSetTypeCode,
+			dataSetValue,
+			dataSetMemo
+		) values 
+		(
+			#{dataSetId},	
+			#{dataSetTypeCode},	
+			#{dataSetValue},	
+			#{dataSetMemo}
+		)
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			dataSetValue = #{dataSetValue},
+			dataSetMemo = #{dataSetMemo}
+		where 
+			dataSetId = #{dataSetId}
+	</update>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			dataSetId = #{dataSetId}
+	</delete>
+	
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			dataSetId = #{dataSetId}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="querylistPage" parameterType="page" resultType="pd">
+		select 
+			a.dataSetId,
+			a.dataSetTypeCode,
+			a.dataSetValue,
+			a.dataSetMemo,
+			a.autoCreateTime
+		from 
+			SYS_dataSet a
+		where 1=1 and a.dataSetTypeCode=#{pd.dataSetTypeCode}
+	</select>
+	
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select 
+			a.dataSetId,
+			a.dataSetTypeCode,
+			a.dataSetValue,
+			a.dataSetMemo,
+			a.autoCreateTime
+		from 
+			SYS_dataSet a
+		where 1=1 
+			and a.dataSetTypeCode = #{dataSetTypeCode}
+	</select>
+	
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			dataSetId in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过编码和值查询 -->
+	<select id="findByCodeAndValue" parameterType="pd" resultType="pd">
+		select
+			dataSetId,
+			dataSetTypeCode,
+			dataSetValue,
+			dataSetMemo,
+			autoCreateTime
+		from
+		 	SYS_dataSet
+		where 1=1
+			and dataSetTypeCode=#{dataSetTypeCode}
+			and dataSetValue=#{dataSetValue}
+	</select>
+	
+	<select id="findByCode" parameterType="pd" resultType="pd">
+		select
+			dataSetId,
+			dataSetTypeCode,
+			dataSetValue,
+			dataSetMemo,
+			autoCreateTime
+		from
+		 	SYS_dataSet
+		where 1=1
+			and dataSetTypeCode=#{dataSetTypeCode}
+		order by autoCreateTime desc
+	</select>
+	
+</mapper>

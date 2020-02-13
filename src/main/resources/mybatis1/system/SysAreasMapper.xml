@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysAreasMapper">
+	
+	<!-- 初始化省份 -->
+	<select id="initProvince" parameterType="pd" resultType="pd">
+		select
+			id,
+			parentId,
+			levelType,
+			name
+		from SYS_areas
+		where 
+			1=1
+			and levelType = 1
+		order by id
+	</select>
+
+	<!-- 初始化城市 -->
+	<select id="getCity" parameterType="pd" resultType="pd">
+		select
+			id,
+			parentId,
+			levelType,
+			name
+		from SYS_areas
+		where 
+			1=1
+			and parentId = #{parentId}
+			and levelType = 2
+		order by id
+	</select>
+	
+	<!-- 初始化区域 -->
+	<select id="getArea" parameterType="pd" resultType="pd">
+		select
+			id,
+			parentId,
+			levelType,
+			name
+		from SYS_areas
+		where 
+			1=1
+			and parentId = #{parentId}
+			and levelType = 3
+		order by id
+	</select>
+
+</mapper>

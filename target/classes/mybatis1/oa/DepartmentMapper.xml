@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DepartmentMapper">
+	
+	<resultMap type="Department" id="departmentResultMap">
+		<id column="DEPARTMENT_ID" property="DEPARTMENT_ID"/>
+		<result column="NAME" property="NAME"/>
+		<result column="PARENT_ID" property="PARENT_ID"/>
+	</resultMap> 
+	
+	<!--表名 -->
+	<sql id="tableName">
+		OA_DEPARTMENT
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		NAME,	
+		NAME_EN,	
+		BIANMA,	
+		PARENT_ID,
+		HEADMAN,
+		TEL,
+		FUNCTIONS,
+		ADDRESS,
+		BZ,	
+		DEPARTMENT_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{NAME},	
+		#{NAME_EN},	
+		#{BIANMA},	
+		#{PARENT_ID},
+		#{HEADMAN},
+		#{TEL},
+		#{FUNCTIONS},
+		#{ADDRESS},
+		#{BZ},	
+		#{DEPARTMENT_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			DEPARTMENT_ID = #{DEPARTMENT_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			NAME = #{NAME},
+			PARENT_ID = #{PARENT_ID},
+			NAME_EN = #{NAME_EN},
+			HEADMAN = #{HEADMAN},
+			BZ = #{BZ},
+			TEL = #{TEL},
+			FUNCTIONS = #{FUNCTIONS},
+			ADDRESS = #{ADDRESS},
+			DEPARTMENT_ID = DEPARTMENT_ID
+		where 
+		DEPARTMENT_ID = #{DEPARTMENT_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			DEPARTMENT_ID = #{DEPARTMENT_ID}
+	</select>
+	
+	<!-- 通过编码获取数据 -->
+	<select id="findByBianma" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			BIANMA = #{BIANMA}
+	</select>
+	
+		<!-- 通过名称获取数据 -->
+	<select id="findByName" parameterType="pd" resultType="pd">
+		select 
+		top 1
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			NAME = #{departmentName}
+	</select>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		a.NAME,	
+		a.NAME_EN,	
+		a.BIANMA,	
+		a.PARENT_ID,
+		a.HEADMAN,
+		a.TEL,
+		a.FUNCTIONS,
+		a.ADDRESS,
+		a.BZ,	
+		a.DEPARTMENT_ID,
+		b.BIANMA as parentBIANMA,
+		b.NAME as parentNAME
+		from 
+		<include refid="tableName"></include> a 
+		left join <include refid="tableName"></include> b on a.PARENT_ID=b.DEPARTMENT_ID
+		where
+			1=1
+		<if test="pd.PARENT_ID!= null and pd.PARENT_ID != ''"><!-- 检索 -->
+		and a.PARENT_ID = #{pd.PARENT_ID}
+		</if>
+		<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				 a.NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				 or 
+				 a.NAME_EN LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				 or
+				 a.BIANMA LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				 or
+				 a.BZ LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				 or 
+				 b.NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				 or
+				 a.BIANMA LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="querylistPage" parameterType="page" resultType="pd">
+		select
+		a.NAME,
+		case when a.PARENT_ID='0' then null else a.PARENT_ID end as _parentId,	
+		a.NAME_EN,	
+		a.BIANMA,	
+		a.PARENT_ID,
+		a.HEADMAN,
+		a.TEL,
+		a.FUNCTIONS,
+		a.ADDRESS,
+		a.BZ,	
+		a.DEPARTMENT_ID,
+		b.BIANMA as parentBIANMA,
+		b.NAME as parentNAME
+		from 
+		<include refid="tableName"></include> a 
+		left join <include refid="tableName"></include> b on a.PARENT_ID=b.DEPARTMENT_ID
+		where
+			1=1
+		<if test="pd.PARENT_ID!= null and pd.PARENT_ID != ''"><!-- 检索 -->
+		and a.PARENT_ID = #{pd.PARENT_ID}
+		</if>
+		<choose>
+			<when test="pd.isAccurateQuery!= null and pd.isAccurateQuery != '' and pd.isAccurateQuery=='true'">
+				<if test="pd.BIANMA!= null and pd.BIANMA != ''">
+					and a.BIANMA=#{pd.BIANMA}
+				</if>
+				<if test="pd.NAME!= null and pd.NAME != ''">
+					and a.NAME=#{pd.NAME}
+				</if>
+				<if test="pd.NAME_EN!= null and pd.NAME_EN != ''">
+					and a.NAME_EN=#{pd.NAME_EN}
+				</if>
+				<if test="pd.parentBIANMA!= null and pd.parentBIANMA != ''">
+					and b.BIANMA=#{pd.parentBIANMA}
+				</if>
+				<if test="pd.parentNAME!= null and pd.parentNAME != ''">
+					and b.NAME=#{pd.parentNAME}
+				</if>
+				<if test="pd.BZ!= null and pd.BZ != ''">
+					and a.BZ=#{pd.BZ}
+				</if>
+			</when>
+			<otherwise >
+				 <if test="pd.BIANMA!= null and pd.BIANMA != ''">
+					and a.BIANMA LIKE CONCAT(CONCAT('%', #{pd.BIANMA}),'%')
+				</if>
+				<if test="pd.NAME!= null and pd.NAME != ''">
+					and a.NAME LIKE CONCAT(CONCAT('%', #{pd.NAME}),'%')
+				</if>
+				<if test="pd.NAME_EN!= null and pd.NAME_EN != ''">
+					and a.NAME_EN  LIKE CONCAT(CONCAT('%', #{pd.NAME_EN}),'%')
+				</if>
+				<if test="pd.parentBIANMA!= null and pd.parentBIANMA != ''">
+					and b.BIANMA  LIKE CONCAT(CONCAT('%', #{pd.parentBIANMA}),'%')
+				</if>
+				<if test="pd.parentNAME!= null and pd.parentNAME != ''">
+					and b.NAME  LIKE CONCAT(CONCAT('%', #{pd.parentNAME}),'%')
+				</if>
+				<if test="pd.BZ!= null and pd.BZ != ''">
+					and a.BZ  LIKE CONCAT(CONCAT('%', #{pd.BZ}),'%')
+				</if>
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		a.NAME,	
+		case when a.PARENT_ID='0' then null else a.PARENT_ID end as _parentId,
+		a.NAME_EN,	
+		a.BIANMA,	
+		a.PARENT_ID,
+		a.HEADMAN,
+		a.TEL,
+		a.FUNCTIONS,
+		a.ADDRESS,
+		a.BZ,	
+		a.DEPARTMENT_ID,
+		b.BIANMA as parentBIANMA,
+		b.NAME as parentNAME
+		from 
+		<include refid="tableName"></include> a 
+		left join <include refid="tableName"></include> b on a.PARENT_ID=b.DEPARTMENT_ID
+		where
+			1=1
+		<if test="PARENT_ID!= null and PARENT_ID != ''"><!-- 检索 -->
+		and a.PARENT_ID = #{PARENT_ID}
+		</if>
+		<choose>
+			<when test="isAccurateQuery!= null and isAccurateQuery != '' and isAccurateQuery=='true'">
+				<if test="BIANMA!= null and BIANMA != ''">
+					and a.BIANMA=#{BIANMA}
+				</if>
+				<if test="NAME!= null and NAME != ''">
+					and a.NAME=#{NAME}
+				</if>
+				<if test="NAME_EN!= null and NAME_EN != ''">
+					and a.NAME_EN=#{NAME_EN}
+				</if>
+				<if test="parentBIANMA!= null and parentBIANMA != ''">
+					and b.BIANMA=#{parentBIANMA}
+				</if>
+				<if test="parentNAME!= null and parentNAME != ''">
+					and b.NAME=#{parentNAME}
+				</if>
+				<if test="BZ!= null and BZ != ''">
+					and a.BZ=#{BZ}
+				</if>
+			</when>
+			<otherwise >
+				 <if test="BIANMA!= null and BIANMA != ''">
+					and a.BIANMA LIKE CONCAT(CONCAT('%', #{BIANMA}),'%')
+				</if>
+				<if test="NAME!= null and NAME != ''">
+					and a.NAME LIKE CONCAT(CONCAT('%', #{NAME}),'%')
+				</if>
+				<if test="NAME_EN!= null and NAME_EN != ''">
+					and a.NAME_EN  LIKE CONCAT(CONCAT('%', #{NAME_EN}),'%')
+				</if>
+				<if test="parentBIANMA!= null and parentBIANMA != ''">
+					and b.BIANMA  LIKE CONCAT(CONCAT('%', #{parentBIANMA}),'%')
+				</if>
+				<if test="parentNAME!= null and parentNAME != ''">
+					and b.NAME  LIKE CONCAT(CONCAT('%', #{parentNAME}),'%')
+				</if>
+				<if test="BZ!= null and BZ != ''">
+					and a.BZ  LIKE CONCAT(CONCAT('%', #{BZ}),'%')
+				</if>
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	
+	<!-- 通过ID获取其子级列表 -->
+	<select id="listSubDepartmentByParentId" parameterType="String" resultMap="departmentResultMap">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			PARENT_ID = #{parentId} order by NAME 
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			DEPARTMENT_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	
+</mapper>

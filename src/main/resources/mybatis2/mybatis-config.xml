@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD SQL Map Config 3.0//EN"  
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 设置 -->
+	<settings> 
+		<setting name="cacheEnabled" value="true"/><!-- 该设置影响所有映射器中配置的缓存全局开关 -->
+		<setting name="useGeneratedKeys" value="true"/><!-- 允许JDBC支持自动生成主键，需要驱动兼容 -->
+		<setting name="defaultExecutorType" value="REUSE"/><!-- 配置默认的执行器，SIMPLE是普通的执行器，REUSE执行器会重用预处理语句，BATCH执行器将重用语句并执行批量操作 -->
+	</settings>
+	<!-- 别名 -->
+	<typeAliases>
+		
+	</typeAliases>
+	<!-- 插件 -->
+	<plugins>
+		<plugin interceptor=""></plugin><!-- 分页插件 -->
+	</plugins>
+	
+</configuration>

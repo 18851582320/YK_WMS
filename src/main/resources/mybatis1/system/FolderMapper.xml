@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FolderMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		WD_folder
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		folderId,
+		folderName,
+		folderMemo,
+		parentFolderId,
+		createUser,
+		createTime,
+		updateUser,
+		updateTime,
+		autoCreateTime
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{folderId},
+		#{folderName},
+		#{folderMemo},	
+		#{parentFolderId},		
+		#{createUser},	
+		#{createTime},
+		#{updateUser},
+		#{updateTime},
+		#{autoCreateTime}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+			folderId,
+			folderName,
+			folderMemo,
+			parentFolderId,
+			createUser,
+			createTime
+		) values (
+			#{folderId},
+			#{folderName},
+			#{folderMemo},	
+			#{parentFolderId},		
+			#{createUser},	
+			#{createTime}
+		)
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			folderName = #{folderName},
+			folderMemo = #{folderMemo},	
+			updateUser = #{updateUser},
+			updateTime = #{updateTime}
+		where 
+			folderId = #{folderId}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		a.folderId,
+		a.folderName,
+		a.folderMemo,
+		a.parentFolderId,
+		a.createUser,
+		a.createTime,
+		a.updateUser,
+		a.updateTime,
+		a.autoCreateTime,
+		b.Name as createUserName,
+		c.Name as updateUserName
+		from WD_folder a
+		left join OA_STAFF b on a.createUser=b.STAFF_ID
+		left join OA_STAFF c on a.updateUser=c.STAFF_ID
+		where a.folderId = #{folderId}
+	</select>
+	
+	<select id="findByFolderName" parameterType="pd" resultType="pd">
+		select 
+		a.folderId,
+		a.folderName,
+		a.folderMemo,
+		a.parentFolderId,
+		a.createUser,
+		a.createTime,
+		a.updateUser,
+		a.updateTime,
+		a.autoCreateTime,
+		b.Name as createUserName,
+		c.Name as updateUserName
+		from WD_folder a
+		left join OA_STAFF b on a.createUser=b.STAFF_ID
+		left join OA_STAFF c on a.updateUser=c.STAFF_ID
+		where a.folderName = #{folderName} and a.parentFolderId=#{parentFolderId}
+	</select>
+	
+	
+	<!-- -->
+	<select id="querylistPage" parameterType="page" resultType="pd" >
+		select 
+		a.folderId,
+		a.folderName,
+		a.folderMemo,
+		a.parentFolderId,
+		a.createUser,
+		a.createTime,
+		a.updateUser,
+		a.updateTime,
+		a.autoCreateTime,
+		b.Name as createUserName,
+		c.Name as updateUserName,
+		d.folderName as parentFolderName
+		from WD_folder a
+		left join OA_STAFF b on a.createUser=b.STAFF_ID
+		left join OA_STAFF c on a.updateUser=c.STAFF_ID
+		left join WD_folder d on a.parentFolderId=d.folderId
+		where 1=1
+		<choose>
+			<when test="pd.isAccurateQuery!= null and pd.isAccurateQuery != '' and pd.isAccurateQuery=='true'">
+				<if test="pd.folderName!= null and pd.folderName != ''">
+					and a.folderName=#{pd.folderName}
+				</if>
+				<if test="pd.folderMemo!= null and pd.folderMemo != ''">
+					and a.folderMemo=#{pd.folderMemo}
+				</if>
+				<if test="pd.parentFolderName!= null and pd.parentFolderName != ''">
+					and d.folderName=#{pd.parentFolderName}
+				</if>
+				<if test="pd.createUserName!= null and pd.createUserName != ''">
+					and c.NAME=#{pd.createUserName}
+				</if>
+				<if test="pd.createTime!= null and pd.createTime != ''">
+					and a.createTime &gt; =#{pd.createTime}
+				</if>
+				<if test="pd.createTime2!= null and pd.createTime2 != ''">
+					and a.createTime &lt; =#{pd.createTime2}
+				</if>
+				<if test="pd.updateUserName!= null and pd.updateUserName != ''">
+					and d.NAME=#{pd.updateUserName}
+				</if>
+				<if test="pd.updateTime!= null and pd.updateTime != ''">
+					and a.updateTime &gt; =#{pd.updateTime}
+				</if>
+				<if test="pd.updateTime2!= null and pd.updateTime2 != ''">
+					and a.updateTime &lt; =#{pd.updateTime2}
+				</if>
+			</when>
+			<otherwise >
+				 <if test="pd.folderName!= null and pd.folderName != ''">
+					and a.folderName LIKE CONCAT(CONCAT('%', #{pd.folderName}),'%')
+				</if>
+				<if test="pd.folderMemo!= null and pd.folderMemo != ''">
+					and a.folderMemo LIKE CONCAT(CONCAT('%', #{pd.folderMemo}),'%')
+				</if>
+				<if test="pd.parentFolderName!= null and pd.parentFolderName != ''">
+					and d.folderName  LIKE CONCAT(CONCAT('%', #{pd.parentFolderName}),'%')
+				</if>
+				<if test="pd.createUserName!= null and pd.createUserName != ''">
+					and c.NAME  LIKE CONCAT(CONCAT('%', #{pd.createUserName}),'%')
+				</if>
+				<if test="pd.createTime!= null and pd.createTime != ''">
+					and a.createTime &gt; =#{pd.createTime}
+				</if>
+				<if test="pd.createTime2!= null and pd.createTime2 != ''">
+					and a.createTime &lt; =#{pd.createTime2}
+				</if>
+				<if test="pd.updateUserName!= null and pd.updateUserName != ''">
+					and d.NAME  LIKE CONCAT(CONCAT('%', #{pd.updateUserName}),'%')
+				</if>
+				<if test="pd.updateTime!= null and pd.updateTime != ''">
+					and a.updateTime &gt; =#{pd.updateTime}
+				</if>
+				<if test="pd.updateTime2!= null and pd.updateTime2 != ''">
+					and a.updateTime &lt; =#{pd.updateTime2}
+				</if>
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="listByParentFolderId" parameterType="pd" resultType="pd" >
+		select 
+		a.folderId,
+		a.folderName,
+		a.folderMemo,
+		a.parentFolderId,
+		a.createUser,
+		a.createTime,
+		a.updateUser,
+		a.updateTime,
+		a.autoCreateTime,
+		b.Name as createUserName,
+		c.Name as updateUserName,
+		d.folderName as parentFolderName
+		from WD_folder a
+		left join OA_STAFF b on a.createUser=b.STAFF_ID
+		left join OA_STAFF c on a.updateUser=c.STAFF_ID
+		left join WD_folder d on a.parentFolderId=d.folderId
+		where 1=1 and a.parentFolderId=#{parentFolderId}
+		order by a.folderName
+	</select>
+	
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			folderId in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

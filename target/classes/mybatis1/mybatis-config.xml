@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD SQL Map Config 3.0//EN"  
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 设置 -->
+	<settings> 
+		<setting name="cacheEnabled" value="true"/><!-- 该设置影响所有映射器中配置的缓存全局开关 -->
+		<setting name="useGeneratedKeys" value="true"/><!-- 允许JDBC支持自动生成主键，需要驱动兼容 -->
+		<setting name="defaultExecutorType" value="REUSE"/><!-- 配置默认的执行器，SIMPLE是普通的执行器，REUSE执行器会重用预处理语句，BATCH执行器将重用语句并执行批量操作 -->
+	</settings>
+	<!-- 别名 -->
+	<typeAliases>
+		<typeAlias type="com.iwfm.entity.system.User" alias="User"/>
+		<typeAlias type="com.iwfm.entity.system.Role" alias="Role"/>
+		<typeAlias type="com.iwfm.entity.system.Menu" alias="Menu"/>
+		<typeAlias type="com.iwfm.entity.oa.Department" alias="Department"/>
+		<typeAlias type="com.iwfm.util.PageData" alias="pd"/>
+		
+		<!-- 
+		<typeAlias type="com.iwfm.entity.system.Dictionaries" alias="Dictionaries"/>
+		 -->
+		 
+		<typeAlias type="com.iwfm.entity.Page" alias="Page"/>
+	</typeAliases>
+	
+	<!-- 插件	 -->
+	<plugins>
+		<plugin interceptor="com.iwfm.plugin.PagePlugin">
+			<property name="dialect" value="sqlserver2012"/><!-- sqlserver or sqlserver2012 or mysql or oracle -->
+			<property name="pageSqlId" value=".*listPage.*"/>
+		</plugin>
+	</plugins>
+
+	
+</configuration>

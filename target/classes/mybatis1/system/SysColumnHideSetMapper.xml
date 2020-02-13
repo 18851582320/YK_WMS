@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysColumnHideSetMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_sysColumnHideSet
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		sysColumnHideSetId,
+		userName,
+		sysDataDeId,
+		sysDataId,
+		sysColumnShowSetMemo	
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{sysColumnHideSetId},	
+		#{userName},	
+		#{sysDataDeId},	
+		#{sysDataId},	
+		#{sysColumnShowSetMemo}	
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+				sysColumnHideSetId,
+				userName,
+				sysDataDeId,
+				sysDataId,
+				sysColumnShowSetMemo	
+		) values (
+				#{sysColumnHideSetId},	
+				#{userName},	
+				#{sysDataDeId},	
+				#{sysDataId},
+				#{sysColumnShowSetMemo}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			sysColumnHideSetId = #{sysColumnHideSetId}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			userName = #{userName},
+			sysDataDeId = #{sysDataDeId},
+			sysDataId = #{sysDataId},
+			sysColumnShowSetMemo = #{sysColumnShowSetMemo}
+		where 
+			sysColumnHideSetId = #{sysColumnHideSetId}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			sysColumnHideSetId = #{sysColumnHideSetId}
+	</select>
+	
+	<select id="findBySysData" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			sysDataDeId = #{sysDataDeId} and sysDataId=#{sysDataId} and userName=#{userName}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	
+	<!-- 列表(查询条件) -->
+	<select id="getColumnHide" parameterType="pd" resultType="pd">
+		select 
+		a.sysColumnHideSetId,
+		b.sysDataDeId,
+		b.sysDataDeFieldCode,
+		b.sysDataDeFieldName,
+		b.sysDataDeFieldType
+		from SYS_sysColumnHideSet a
+		inner join SYS_sysDataDetail b on a.sysDataDeId=b.sysDataDeId
+		inner join SYS_sysData c on b.sysDataIndex=c.sysDataIndex
+		where a.userName=#{userName} and c.sysDataIndex=#{sysDataIndex} and c.sysDataTableName=#{sysDataTableName} and isnull(b.asQueryCondition,'是')='是'
+	</select>
+	
+	
+	<!-- 列表(查询条件设置) -->
+	<select id="getColumnHideSetList" parameterType="pd" resultType="pd">
+		select 
+		a.sysDataDeId,
+		b.sysDataId,
+		a.sysDataDeFieldCode,
+		a.sysDataDeFieldName,
+		a.sysDataDeFieldType,
+		c.sysColumnHideSetId
+		from SYS_sysDataDetail a
+		inner join SYS_sysData b on a.sysDataIndex=b.sysDataIndex
+		left join(
+			select distinct a.sysColumnHideSetId,b.sysDataDeId
+			from SYS_sysColumnHideSet a
+			inner join SYS_sysDataDetail b on a.sysDataDeId=b.sysDataDeId
+			inner join SYS_sysData c on b.sysDataIndex=c.sysDataIndex
+			where a.userName=#{userName} and c.sysDataIndex=#{sysDataIndex} and c.sysDataTableName=#{sysDataTableName}
+		)c on a.sysDataDeId=c.sysDataDeId
+		where b.sysDataIndex=#{sysDataIndex} and b.sysDataTableName=#{sysDataTableName} and isnull(a.asQueryCondition,'是')='是'
+		order by a.sysDataDeFieldOrder
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			sysColumnHideSetId in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<delete id="deleteBySysData" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+		sysDataDeId = #{sysDataDeId} and sysDataId=#{sysDataId} and userName=#{userName}
+	</delete>
+	
+</mapper>

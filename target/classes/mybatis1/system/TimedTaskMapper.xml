@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TimedTaskMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_timedTask
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		timedTaskId,
+		timedTaskName,
+		timedTaskAliasName,
+		timedTaskType,	
+		timedTaskClass,
+		timedTaskState,
+		cronExpression,
+		timedTaskMemo,
+		createTime,
+		updateTime
+		
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{timedTaskId},	
+		#{timedTaskName},	
+		#{timedTaskAliasName},	
+		#{timedTaskType},	
+		#{timedTaskClass},	
+		#{timedTaskState},
+		#{cronExpression},
+		#{timedTaskMemo},
+		#{createTime},
+		#{updateTime}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+		<include refid="tableName"></include>
+		(
+			timedTaskId,
+			timedTaskName,
+			timedTaskAliasName,
+			timedTaskType,	
+			timedTaskClass,
+			timedTaskState,
+			cronExpression,
+			timedTaskMemo,
+			createTime
+		) values 
+		(
+			#{timedTaskId},	
+			#{timedTaskName},	
+			#{timedTaskAliasName},	
+			#{timedTaskType},	
+			#{timedTaskClass},	
+			#{timedTaskState},
+			#{cronExpression},
+			#{timedTaskMemo},
+			#{createTime}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			timedTaskId = #{timedTaskId}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			timedTaskName = #{timedTaskName},
+			timedTaskAliasName = #{timedTaskAliasName},
+			timedTaskType = #{timedTaskType},
+			timedTaskClass = #{timedTaskClass},
+			timedTaskState = #{timedTaskState},
+			cronExpression = #{cronExpression},
+			timedTaskMemo = #{timedTaskMemo},
+			updateTime = #{updateTime}			
+		where 
+			timedTaskId = #{timedTaskId}
+	</update>
+	<!-- 修改 -->
+	<update id="editState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			timedTaskState = #{timedTaskState},
+			updateTime = #{updateTime}			
+		where 
+			timedTaskId = #{timedTaskId}
+	</update>
+	
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			timedTaskId = #{timedTaskId}
+	</select>
+	
+	
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			timedTaskState = #{timedTaskState}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="querylistPage" parameterType="page" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include> a
+		where 1=1
+		<choose>
+			<when test="pd.isAccurateQuery!= null and pd.isAccurateQuery != '' and pd.isAccurateQuery=='true'">
+				<if test="pd.timedTaskName!= null and pd.timedTaskName != ''">
+					and a.timedTaskName=#{pd.timedTaskName}
+				</if>
+				<if test="pd.timedTaskAliasName!= null and pd.timedTaskAliasName != ''">
+					and a.timedTaskAliasName=#{pd.timedTaskAliasName}
+				</if>
+				<if test="pd.timedTaskType!= null and pd.timedTaskType != ''">
+					and a.timedTaskType=#{pd.timedTaskType}
+				</if>
+				<if test="pd.timedTaskClass!= null and pd.timedTaskClass != ''">
+					and a.timedTaskClass=#{pd.timedTaskClass}
+				</if>
+				<if test="pd.timedTaskState!= null and pd.timedTaskState != ''">
+					and a.timedTaskState=#{pd.timedTaskState}
+				</if>
+				<if test="pd.cronExpression!= null and pd.cronExpression != ''">
+					and a.cronExpression=#{pd.cronExpression}
+				</if>
+				<if test="pd.timedTaskMemo!= null and pd.timedTaskMemo != ''">
+					and a.timedTaskMemo=#{pd.timedTaskMemo}
+				</if>
+				<if test="pd.createTime!= null and pd.createTime != ''">
+					and a.createTime &gt; =#{pd.createTime}
+				</if>
+				<if test="pd.createTime2!= null and pd.createTime2 != ''">
+					and a.createTime &lt; =#{pd.createTime2}
+				</if>
+				<if test="pd.updateTime!= null and pd.updateTime != ''">
+					and a.updateTime &gt; =#{pd.updateTime}
+				</if>
+				<if test="pd.updateTime2!= null and pd.updateTime2 != ''">
+					and a.updateTime &lt; =#{pd.updateTime2}
+				</if>
+			</when>
+			<otherwise >
+				 <if test="pd.timedTaskName!= null and pd.timedTaskName != ''">
+					and a.timedTaskName LIKE CONCAT(CONCAT('%', #{pd.timedTaskName}),'%')
+				</if>
+				<if test="pd.timedTaskAliasName!= null and pd.timedTaskAliasName != ''">
+					and a.timedTaskAliasName LIKE CONCAT(CONCAT('%', #{pd.timedTaskAliasName}),'%')
+				</if>
+				<if test="pd.timedTaskType!= null and pd.timedTaskType != ''">
+					and a.timedTaskType  LIKE CONCAT(CONCAT('%', #{pd.timedTaskType}),'%')
+				</if>
+				<if test="pd.timedTaskClass!= null and pd.timedTaskClass != ''">
+					and a.timedTaskClass  LIKE CONCAT(CONCAT('%', #{pd.timedTaskClass}),'%')
+				</if>
+				<if test="pd.timedTaskState!= null and pd.timedTaskState != ''">
+					and a.timedTaskState=#{pd.timedTaskState}
+				</if>
+				<if test="pd.cronExpression!= null and pd.cronExpression != ''">
+					and a.cronExpression  LIKE CONCAT(CONCAT('%', #{pd.cronExpression}),'%')
+				</if>
+				<if test="pd.timedTaskMemo!= null and pd.timedTaskMemo != ''">
+					and a.timedTaskMemo  LIKE CONCAT(CONCAT('%', #{pd.timedTaskMemo}),'%')
+				</if>
+				<if test="pd.createTime!= null and pd.createTime != ''">
+					and a.createTime &gt; =#{pd.createTime}
+				</if>
+				<if test="pd.createTime2!= null and pd.createTime2 != ''">
+					and a.createTime &lt; =#{pd.createTime2}
+				</if>
+				<if test="pd.updateTime!= null and pd.updateTime != ''">
+					and a.updateTime &gt; =#{pd.updateTime}
+				</if>
+				<if test="pd.updateTime2!= null and pd.updateTime2 != ''">
+					and a.updateTime &lt; =#{pd.updateTime2}
+				</if>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			timedTaskId in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

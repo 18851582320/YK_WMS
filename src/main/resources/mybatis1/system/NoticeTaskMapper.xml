@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="NoticeTaskMapper">
+
+	<sql id="tableName">
+		SYS_noticeTask
+	</sql>
+
+	<sql id="Field">
+		noticeTaskId,
+		tableName,
+		tableKeyValue,
+		smsIsSend,
+		noticeType,
+		isSend
+	</sql>
+	
+	<sql id="FieldValue">
+		#{noticeTaskId},
+		#{tableName},
+		#{tableKeyValue},
+		#{smsIsSend},
+		#{noticeType},
+		#{isSend}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+		SYS_noticeTask
+		(
+			noticeTaskId,
+			tableName,
+			tableKeyValue,
+			smsIsSend,
+			noticeType,
+			isSend
+		) values 
+		(
+			#{noticeTaskId},
+			#{tableName},
+			#{tableKeyValue},
+			0,
+			#{noticeType},
+			#{isSend}
+		)
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			isSend = 1
+		where 1=1 and noticeTaskId = #{noticeTaskId}
+	</update>
+	
+	
+	<update id="editSms" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			smsIsSend = 1
+		where 1=1 and noticeTaskId = #{noticeTaskId}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			noticeTaskId = #{noticeTaskId}
+	</select>
+	
+	
+	<update id="editBatch" parameterType="String">
+		update
+		<include refid="tableName"></include>
+		set 
+			isSend = 1
+		where	noticeTaskId in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	
+	<update id="editBatchSms" parameterType="String">
+		update
+		<include refid="tableName"></include>
+		set 
+			smsIsSend = 1
+		where	noticeTaskId in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	
+	
+	<update id="editBatchSaleNoSend" parameterType="pd">
+		update a set a.smsIsSend=1
+		from SYS_noticeTask a 
+		left join PSM_saleLeads b on a.tableKeyValue=b.saleLeadsId
+		left join OA_STAFF c on b.saleUser=c.STAFF_ID
+		inner join(
+			select c.STAFF_ID 
+			from SYS_dataSet a
+			left join sys_user b on a.dataSetValue=b.USERNAME
+			left join OA_STAFF c on b.USER_ID=c.USER_ID
+			where 1=1 and a.dataSetTypeCode='noSms' 
+		)d on c.STAFF_ID=d.STAFF_ID
+		where 1=1 and a.smsIsSend=0 and a.tableName='PSM_saleLeads'
+	</update>
+	
+	
+	
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		a.noticeTaskId,
+		a.tableName,
+		a.tableKeyValue,
+		a.isSend,
+		b.taskName,
+		c.NAME as sendUserName,
+		d.id,
+		d.token,
+		d.clientid,
+		d.appid,
+		d.appkey 
+		from SYS_noticeTask a 
+		left join TK_task b on a.tableKeyValue=b.taskId
+		left join OA_STAFF c on b.createUser=c.STAFF_ID
+		left join OA_STAFF d on b.taskReveiveStaffId=d.STAFF_ID
+		where 1=1 and a.isSend=0 and d.clientid is not null
+	</select>
+	
+	
+	<select id="listSmsNoSend" parameterType="pd" resultType="pd">
+		select
+		a.noticeTaskId,
+		a.tableName,
+		a.tableKeyValue,
+		a.isSend,
+		a.noticeType,
+		b.taskName,
+		CONVERT(varchar(100), b.planEndTime, 23) as planEndTime,
+		c.TEL as sendTel,
+		c.NAME as sendUserName,
+		d.TEL,
+		d.NAME as receiveUserName,
+		e.TEL as checkTel,
+		e.NAME as checkUserName
+		from SYS_noticeTask a 
+		left join TK_task b on a.tableKeyValue=b.taskId
+		left join OA_STAFF c on b.createUser=c.STAFF_ID
+		left join OA_STAFF d on b.taskReveiveStaffId=d.STAFF_ID
+		left join OA_STAFF e on b.taskCheckStaffId=e.STAFF_ID
+		where 1=1 and a.smsIsSend=0 and d.TEL !='' and d.TEL is not null and tableName='TK_task'
+	</select>
+	
+	
+	
+	<select id="listBugNoSend" parameterType="pd" resultType="pd">
+		select
+		a.noticeTaskId,
+		a.tableName,
+		a.tableKeyValue,
+		a.isSend,
+		c.NAME as sendUserName,
+		d.TEL
+		from SYS_noticeTask a 
+		left join BG_bug b on a.tableKeyValue=b.bugId
+		left join OA_STAFF c on b.bugCreateStaffId=c.STAFF_ID  
+		left join OA_STAFF d on b.bugStaffId=d.STAFF_ID
+		where 1=1 and a.smsIsSend=0 and d.TEL !='' and d.TEL is not null and tableName='BG_bug'
+	</select>
+	
+	
+	
+	<select id="listSaleLead" parameterType="pd" resultType="pd">
+		select
+		a.noticeTaskId,
+		a.tableName,
+		a.tableKeyValue,
+		a.isSend,
+		c.NAME as sendUserName,
+		d.TEL,
+		b.customerName,
+		b.contactName,
+		b.phone
+		from SYS_noticeTask a 
+		left join PSM_saleLeads b on a.tableKeyValue=b.saleLeadsId
+		left join OA_STAFF c on b.createUser=c.STAFF_ID  
+		left join OA_STAFF d on b.saleUser=d.STAFF_ID
+		where 1=1 and a.smsIsSend=0 and d.TEL !='' and d.TEL is not null and tableName='PSM_saleLeads'
+	</select>
+	
+	
+	<select id="listExpense" parameterType="pd" resultType="pd">
+		select
+		a.noticeTaskId,
+		a.tableName,
+		a.tableKeyValue,
+		a.isSend,
+		c.NAME as toUserName,
+		c.TEL
+		from SYS_noticeTask a 
+		left join BX_subExpenseCheck b on a.tableKeyValue=b.subExpenseCheckId
+		left join OA_STAFF c on b.subExpenseCheckUser=c.STAFF_ID  
+		where 1=1 and a.smsIsSend=0 
+		and b.subExpenseCheckTime is  null and b.isBack!=1 and c.TEL !='' and c.TEL is not null and tableName='BX_subExpense' 
+	</select>
+	
+	
+	
+</mapper>

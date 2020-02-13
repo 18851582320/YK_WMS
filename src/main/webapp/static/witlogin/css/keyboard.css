@@ -1,0 +1,60 @@
+@charset "utf-8";
+/* key_board */
+.keyboard{left:20px; position:absolute; bottom:0; width:1007px; background:url(../images/keyboard/keyboardmbg.png) repeat-y; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius:10px; height:338px; z-index:1000;  display:block}
+.keyboardcont{ width:1000px; margin:25px auto; position:relative}
+.letterboard{ width:666px; float:left;margin-left: 20px}
+.caps{ background:url(../images/keyboard/capslock.png) no-repeat; width:71px; height:67px; display:inline-block}
+.m25{ margin-left:35px}
+.m140{ margin-left:140px}
+.m18{ margin-left:18px}
+.m8{ margin-left:8px}
+.numboard{ width:200px; float:right}
+.caps_on{background:url(../images/keyboard/capslock_1.png) no-repeat; width:71px; height:67px; display:inline-block}
+.deletekey{ background:url(../images/keyboard/delete.png) no-repeat; width:97px; height:67px; display:inline-block}
+.spacekey{ background:url(../images/keyboard/space.png) no-repeat; width:195px; height:67px; display:inline-block}
+.enterkey{ background:url(../images/keyboard/enter_1.png) no-repeat; width:97px; height:67px; display:inline-block}
+.enterkey_1{background:url(../images/keyboard/enter_2.png) no-repeat; width:120px; height:67px; display:inline-block}
+.keyboardcont a span{ background:url(../images/keyboard/keyboard.png) no-repeat; width:55px; height:67px; float:left; font-size:26px; line-height:62px; cursor:pointer; text-align:center; margin-right:10px; margin-bottom:10px; display:inline-block}
+.keyboardcont a:hover span{background:url(../images/keyboard/keyboardover.png) no-repeat;}
+.keyboardcont_1 a span{ background:url(../images/keyboard/keyboardover.png) no-repeat; width:55px; height:67px; float:left; font-size:26px; line-height:62px; cursor:pointer; text-align:center; margin-right:10px; margin-bottom:10px; display:inline-block}
+.key_1{ background:url(../images/keyboard/key_1.png) no-repeat; width:71px; height:67px; display:inline-block}
+.keyboardclose{ background:url(../images/keyboard/keyboardclose.png) no-repeat; width:38px; height:38px; position:absolute; right:-20px; top:-40px; cursor:pointer}
+.keyboardcontzj{ width:300px; float:right}
+.keyboardcontzj a span{ background:url(../images/keyboard/keyboard.png) no-repeat; width:55px; height:67px; float:left; font-size:26px; line-height:62px; cursor:pointer; text-align:center; margin-right:10px; margin-bottom:10px; display:inline-block}
+.keyboardcontzj a:hover span{background:url(../images/keyboard/keyboardover.png) no-repeat;}
+.numboardzj{ width:200px; float:left; margin-left:22px}
+.keyl{ background:url(../images/keyboard/keyl.png) no-repeat; width:55px; height:143px; display:inline-block; margin-bottom:10px}
+.homebg{ background:url(../images/keyboard/homebg.png) no-repeat; width:95px; height:39px; float:left;padding:10px 0 0 5px; font-size:14px;}
+em{ font-style:normal}
+.quanping{ background:url(../images/keyboard/fullscreen.png) no-repeat;  height:16px; float:left; margin:2px 0 0 15px; padding-left:20px;line-height:13px}
+.quanpingexit{background:url(../images/keyboard/fullscreen_exit.png) no-repeat;  height:16px; float:left; margin:2px 0 0 8px; padding-left:20px; line-height:13px}
+
+a{ color:#666; text-decoration:none}
+.keyboard{left:150px; position:absolute; bottom:0; width:1007px; background:url(../images/keyboard/keyboardmbg.png) repeat-y; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius:10px; height:338px; z-index:1000;  display:block}
+.keyboardcont{ width:1000px; margin:25px auto; position:relative}
+.letterboard{ width:666px; float:left;margin-left: 20px}
+.m25{ margin-left:35px}
+.m140{ margin-left:140px}
+.m18{ margin-left:18px}
+.m8{ margin-left:8px}
+.numboard{ width:200px; float:right}
+.caps{ background:url(../images/keyboard/capslock.png) no-repeat; width:71px; height:67px; display:inline-block}
+.caps_on{background:url(../images/keyboard/capslock_1.png) no-repeat; width:71px; height:67px; display:inline-block}
+.deletekey{ background:url(../images/keyboard/delete.png) no-repeat; width:97px; height:67px; display:inline-block}
+.spacekey{ background:url(../images/keyboard/space.png) no-repeat; width:195px; height:67px; display:inline-block}
+.enterkey{ background:url(../images/keyboard/enter_1.png) no-repeat; width:97px; height:67px; display:inline-block}
+.enterkey_1{background:url(../images/keyboard/enter_2.png) no-repeat; width:120px; height:67px; display:inline-block}
+.keyboardcont a span{ background:url(../images/keyboard/keyboard.png) no-repeat; width:55px; height:67px; float:left; font-size:26px; line-height:62px; cursor:pointer; text-align:center; margin-right:10px; margin-bottom:10px; display:inline-block}
+.keyboardcont a:hover span{background:url(../images/keyboard/keyboardover.png) no-repeat;}
+.keyboardcont_1 a span{ background:url(../images/keyboard/keyboardover.png) no-repeat; width:55px; height:67px; float:left; font-size:26px; line-height:62px; cursor:pointer; text-align:center; margin-right:10px; margin-bottom:10px; display:inline-block}
+.key_1{ background:url(../images/keyboard/key_1.png) no-repeat; width:71px; height:67px; display:inline-block}
+.keyboardclose{ background:url(../images/keyboard/keyboardclose.png) no-repeat; width:38px; height:38px; position:absolute; right:-20px; top:-40px; cursor:pointer}
+.keyboardcontzj{ width:300px; float:right}
+.keyboardcontzj a span{ background:url(../images/keyboard/keyboard.png) no-repeat; width:55px; height:67px; float:left; font-size:26px; line-height:62px; cursor:pointer; text-align:center; margin-right:10px; margin-bottom:10px; display:inline-block}
+.keyboardcontzj a:hover span{background:url(../images/keyboard/keyboardover.png) no-repeat;}
+.numboardzj{ width:200px; float:left; margin-left:22px}
+.keyl{ background:url(../images/keyboard/keyl.png) no-repeat; width:55px; height:143px; display:inline-block; margin-bottom:10px}
+.homebg{ background:url(../images/keyboard/homebg.png) no-repeat; width:95px; height:39px; float:left;padding:10px 0 0 5px; font-size:14px;}
+em{ font-style:normal}
+.quanping{ background:url(../images/keyboard/fullscreen.png) no-repeat;  height:16px; float:left; margin:2px 0 0 15px; padding-left:20px;line-height:13px}
+.quanpingexit{background:url(../images/keyboard/fullscreen_exit.png) no-repeat;  height:16px; float:left; margin:2px 0 0 8px; padding-left:20px; line-height:13px}

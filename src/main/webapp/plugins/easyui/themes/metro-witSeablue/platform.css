@@ -1,0 +1,399 @@
+@CHARSET "utf-8";
+
+/* html{height:100%;background:#01c6d7;min-width:1200px;overflow:hidden} */
+
+html {
+	height: 100%;
+	overflow: hidden;
+	font-size: 12px;
+	margin: 0;
+	padding: 0;
+	font-family: "微软雅黑";
+}
+
+html a {
+	text-decoration: none
+}
+
+html a:hover {
+	text-decoration: none;
+}
+
+
+/*顶层区域*/
+.tophead {
+	overflow: hidden;
+	display: inline-block;
+	position: relative;
+	width: 100%;
+	height: 50px;
+	background-color: #f7f7f7;
+	border: none;
+	background-color: #00a0be;
+}
+/*左侧菜单*/
+.rightmenu {
+	width: 180px;
+	overflow: hidden;
+	background-color:#2a3f54 
+}
+
+.layermask {
+	position: absolute;
+	z-index: 3000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: #fff;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+	display: none;
+	overflow: hidden;
+}
+
+.progressBar {
+	border: none;
+	background: white url(images/ui.loading.gif) no-repeat 10px center;
+	display: none;
+	width: 200px;
+	height: 40px;
+	top: 50%;
+	left: 50%;
+	margin-left: -74px;
+	margin-top: -14px;
+	text-indent: 50px;
+	text-align: left;
+	line-height: 40px;
+	font-size: 12px;
+	color: #333;
+	position: absolute;
+	z-index: 3001;
+}
+
+.bgtrans {
+	border: none;
+	background-color: #01c6d7;
+}
+
+#pf-hd .pf-logo {
+	float: left;
+	/* padding: 0 15px; */
+	height: 100%;
+	width: 265px;
+	/* border-right: 1px solid #00adce; */
+	line-height: 50px;
+	border-bottom: none;
+	color: #ffffff;
+	font-size: 20px;
+	font-weight: bold;
+	/* background-color:#00a0be; */
+	text-align: center; 
+}
+
+
+#pf-hd .pf-logo i{
+	font-size: 20px;
+	font-weight: bold;
+}
+
+#pf-hd .pf-logo span{
+	background-color: red;
+}
+
+#pf-hd .pf-logo img {
+	vertical-align: middle;
+	margin-left: -10px
+}
+
+#pf-hd .pf-logo .system-name {
+	display: none;
+	float: left;
+	line-height: 60px;
+	font-size: 26px;
+	color: #fff;
+	text-shadow: 1px 1px 2px rgba(0,0,0,0.5)
+}
+
+
+
+#pf-hd .pf-user {
+	position: relative;
+	float: right;
+	margin-right: 10px;
+	padding: 0 10px;
+	height: 50px;
+	line-height: 50px;
+	margin-right: 0
+}
+
+#pf-hd .pf-user .iconfont{
+	color: #ffffff;
+}
+
+#pf-hd .pf-user .pf-user-photo {
+	float: left;
+	margin: 0px 5px 0 0;
+	width: 48px;
+	height: 48px;
+	line-height: 50px;
+}
+
+#pf-hd .pf-user .pf-user-photo i{
+	color: #ffffff;
+	font-size: 30px;
+	margin-left: 14px;
+}
+
+#pf-hd .pf-user .pf-user-photo img {
+	margin: 4px;
+}
+
+#pf-hd .pf-user .pf-user-name {
+	float: left;
+	max-width: 150px;
+	color: #ffffff;
+	font-size: 14px;
+	margin-right: 5px
+}
+
+#pf-hd .pf-user:hover .pf-user-panel {
+	display: block
+}
+
+
+#pf-hd .pf-expandCollapse {
+	position: relative;
+	float: right;
+	margin-right: 20px;
+	height: 50px;
+	line-height: 50px;
+	margin-left: 5px;
+	cursor: pointer;
+}
+
+#pf-hd .pf-expandCollapse .pf-expandCollapse-btn {
+	float: left;
+	width: 30px;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+}
+
+#pf-hd .pf-expandCollapse .pf-expandCollapse-btn i{
+	color: #ffffff;
+	font-size: 30px;
+}
+
+#pf-hd .pf-exit {
+	position: relative;
+	float: right;
+	margin-right: 5px;
+	padding: 0 10px;
+	height: 50px;
+	cursor: pointer;
+}
+#pf-hd .pf-exit-div {background-color:#f79d00; height: 30px;width: 60px;margin-top: 10px;line-height: 30px;font-size: 14px;color: #ffffff;text-align: center;}
+#pf-hd .pf-exit-div:hover{ background-color: #fff; color: #ed7f24;}
+
+
+.menu .menu-active {
+	background: #01c6d7;
+	color: #fff
+}
+
+#mm .menu-item {
+	border: none;
+	border-left: 1px solid #cbcbcb;
+	border-right: 1px solid #cbcbcb;
+	height: 28px !important;
+	line-height: 28px !important;
+}
+
+#mm .menu-item .menu-text {
+	height: 28px !important;
+	line-height: 28px !important;
+}
+
+#mm.easyui-menu {
+	border: none;
+	border-top: 1px solid #cbcbcb;
+}
+
+.no-child ul {
+	display: none !important;
+}
+
+
+
+.msgts {
+	position: absolute;
+	background: url(../images/main/xxts.png) no-repeat;
+	color: #fff;
+	font-size: 10px;
+	width: 23px;
+	height: 17px;
+	line-height: 17px;
+	text-align: center;
+	z-index: 100;
+	right: 88px;
+	top: 15px;
+}
+
+.mailtext {
+	color: #F00;
+}
+
+
+.layout-panel-west .panel-tool {
+	display: none;
+}
+
+
+.rightmenu ul{padding-top: 30px;}
+.rightmenu ul li { height: 78px; text-align: center; }
+.rightmenu ul li a{ display: inline-block;text-align: left; padding-left: 8px; padding-left: 12px; background-color: #00a0be; color: #fff; font-size: 16px; /*font-weight: 600;*/ width: 150px; height: 50px; line-height: 50px; border-radius: 6px;}
+.rightmenu ul li a.active{ background-color: #ed7f24;}
+.rightmenu ul li a span{ margin-left: 6px;}
+.rightmenu ul li a:hover{ background-color: #ed7f24;}
+
+
+
+.tabs-panels .panel-body {
+	overflow: hidden;
+}
+
+.datagrid .datagrid-body .datagrid-btable td div{
+	height: 45px;line-height: 45px;
+}
+
+.datagrid .datagrid-body .datagrid-btable td div .btn{
+	margin-bottom: 2px;
+}
+
+.datagrid .datagrid-body .datagrid-btable td div input[type='checkbox']{
+	margin-top: 15px;
+}
+
+.datagrid .datagrid-btable .datagrid-cell{overflow: hidden;text-overflow:ellipsis;white-space: nowrap;}
+
+
+.messager-window .messager-button .l-btn{
+	color: #ffffff;
+	background: #01c6d7;
+	background-repeat: repeat-x;
+	border: 3px solid #01c6d7;
+	-moz-border-radius: 0px 0px 0px 0px;
+	-webkit-border-radius: 0px 0px 0px 0px;
+	border-radius: 0px 0px 0px 0px;
+	text-decoration: none;
+	display: inline-block;
+	overflow: hidden;
+	margin: 0;
+	padding: 0 6px;
+	cursor: pointer;
+	outline: none;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 24px;
+	height: 24px;
+	margin-left: 10px;
+	font-family: iconfont;
+}
+
+/*messager  btn*/
+.messager-window .messager-button .l-btn,
+.messager-window .messager-button .l-btn:focus {
+  background-color: #01c6d7 !important;
+  border-color: #01c6d7;
+}
+.messager-window .messager-button .l-btn:hover,
+.messager-window .messager-button .l-btn:active,
+.messager-window .messager-button .l-btn:focus:active,
+.messager-window .messager-button .l-btn:focus:hover,
+.messager-window .messager-button .l-btn:active:hover,
+.messager-window .messager-button .l-btn.active:hover {
+  background-color: #00D0DB !important;
+  border-color: #01c6d7;
+}
+
+.messager-window .messager-button .l-btn .l-btn-text {
+	display: inline-block;
+	vertical-align: top;
+	width: auto;
+	line-height: 26px;
+	font-size: 12px;
+	padding: 0;
+	margin: 0 4px
+}
+
+.messager-window .messager-button .l-btn .l-btn-left:before {
+	content: "\e786";
+}
+/*messager btn end*/
+
+#mm .menu-text {
+	height: 20px;
+	line-height: 20px;
+	float: left;
+	padding-left: 10px;
+	margin: 0px;
+}
+
+#mm .menu-line{
+	border: none;
+}
+#mm #mm-exit{
+	border-bottom: 1px solid #cbcbcb;
+}
+
+#tabs .tabs .tabs-icon {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 10px;
+  top: 38%;
+  margin-top: -8px;
+}
+
+#mainPanle{
+	border-top: none;
+}
+
+
+/*列表和增加修改样式 */
+.main_tableDiv {
+	margin-top: 10px;
+	margin-left: 10px;
+}
+
+.main_tableDivEdit {margin: 10px 10px 10px 10px;}
+
+.main_tableDiv .dataGridDiv {
+	/* margin-right: 5px; */
+}
+
+.dataGridDiv .dataGridToolBar{
+	height: 46px;padding-top: 12px;
+}
+
+.addEditDivBody{height: 100%;}
+.addEditDiv{font-size:14px;background-color: #fafafa;height: 100%;}
+
+.addEditDivNoBtn{font-size:12px;height: 100%;background-color: #fafafa;}
+.saveEditCenter{overflow: auto;}
+.saveEditCenter tr{height: 30px;}
+.saveEditCenter input[type=text]{width: 150px;}
+.addEditButtonDiv{text-align: center;height: 36px;margin-left: 5px;margin-right: 5px;border-top: 1px solid #c3d9e0;padding-top: 5px;}
+
+.editMiddleTr{height: 5px;}
+.editTr{height: 40px;}
+.editTdTitle{width: 90px;text-align: right;}
+.editTdValue{width: 180px;}
+.editTdMid{width: 5px;}
+.editTdInput{width: 150px;height: 26px;}
+
+.saveEditCenter .detailDataGridDiv{margin: 5px;}
+.saveEditCenter .detailDataGridDiv tr{height: 45px;}
+/*列表和增加修改样式 end */
+

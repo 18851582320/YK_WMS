@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TeamMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		OA_team
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		teamId,
+		teamCode,
+		teamName,
+		createUser,	
+		createTime,
+		updateUser,
+		updateTime,
+		teamMemo,
+		autoCreateTime
+		
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{teamId},	
+		#{teamCode},	
+		#{teamName},	
+		#{createUser},	
+		#{createTime},	
+		#{updateUser},
+		#{updateTime},
+		#{teamMemo},
+		#{autoCreateTime}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+		<include refid="tableName"></include>
+		(
+			teamId,
+			teamCode,
+			teamName,
+			createUser,	
+			createTime,
+			teamMemo
+		) values 
+		(
+			#{teamId},	
+			#{teamCode},	
+			#{teamName},	
+			#{createUser},	
+			#{createTime},	
+			#{teamMemo}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			teamId = #{teamId}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			teamCode = #{teamCode},
+			teamName = #{teamName},
+			updateUser = #{updateUser},
+			updateTime = #{updateTime},
+			teamMemo = #{teamMemo}			
+		where 
+			teamId = #{teamId}
+	</update>
+	
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		a.teamId,
+		a.teamCode,
+		a.teamName,
+		a.createUser,	
+		a.createTime,
+		a.updateUser,
+		a.updateTime,
+		a.teamMemo,
+		a.autoCreateTime,
+		b.Name as createUserName,
+		c.Name as updateUserName
+		from 
+		<include refid="tableName"></include> a
+		left join OA_STAFF b on a.createUser=b.STAFF_ID
+		left join OA_STAFF c on a.updateUser=c.STAFF_ID
+		where 
+			a.teamId = #{teamId}
+	</select>
+	
+	<!-- 通过表编码获取获取数据 -->
+	<select id="findByCode" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			 teamCode=#{teamCode}
+	</select>
+	
+	<select id="listForSelect" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		a.teamId,
+		a.teamCode,
+		a.teamName,
+		a.createUser,
+		a.createTime,
+		a.updateUser,
+		a.updateTime,
+		a.teamMemo,
+		c.Name as createUserName,
+		d.Name as updateUserName
+		from 
+		<include refid="tableName"></include>a
+		left join OA_STAFF c on a.createUser=c.STAFF_ID
+		left join OA_STAFF d on a.updateUser=d.STAFF_ID
+		where 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+		and
+			(
+				a.teamCode LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				 or 				
+				a.teamName LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				 or 				
+				a.teamMemo LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				 or 				
+				c.NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+				 or 				
+				d.NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+			)
+				
+		</if>
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="querylistPage" parameterType="page" resultType="pd">
+		select
+		a.teamId,
+		a.teamCode,
+		a.teamName,
+		a.createUser,
+		a.createTime,
+		a.updateUser,
+		a.updateTime,
+		a.teamMemo,
+		c.Name as createUserName,
+		d.Name as updateUserName
+		from 
+		<include refid="tableName"></include>a
+		left join OA_STAFF c on a.createUser=c.STAFF_ID
+		left join OA_STAFF d on a.updateUser=d.STAFF_ID
+		where 1=1
+		<choose>
+			<when test="pd.isAccurateQuery!= null and pd.isAccurateQuery != '' and pd.isAccurateQuery=='true'">
+				<if test="pd.teamCode!= null and pd.teamCode != ''">
+					and a.teamCode=#{pd.teamCode}
+				</if>
+				<if test="pd.teamName!= null and pd.teamName != ''">
+					and a.teamName=#{pd.teamName}
+				</if>
+				<if test="pd.teamMemo!= null and pd.teamMemo != ''">
+					and a.teamMemo=#{pd.teamMemo}
+				</if>
+				<if test="pd.createUserName!= null and pd.createUserName != ''">
+					and c.NAME=#{pd.createUserName}
+				</if>
+				<if test="pd.createTime!= null and pd.createTime != ''">
+					and a.createTime &gt; =#{pd.createTime}
+				</if>
+				<if test="pd.createTime2!= null and pd.createTime2 != ''">
+					and a.createTime &lt; =#{pd.createTime2}
+				</if>
+				<if test="pd.updateUserName!= null and pd.updateUserName != ''">
+					and d.NAME=#{pd.updateUserName}
+				</if>
+				<if test="pd.updateTime!= null and pd.updateTime != ''">
+					and a.updateTime &gt; =#{pd.updateTime}
+				</if>
+				<if test="pd.updateTime2!= null and pd.updateTime2 != ''">
+					and a.updateTime &lt; =#{pd.updateTime2}
+				</if>
+			</when>
+			<otherwise >
+				 <if test="pd.teamCode!= null and pd.teamCode != ''">
+					and a.teamCode LIKE CONCAT(CONCAT('%', #{pd.teamCode}),'%')
+				</if>
+				<if test="pd.teamName!= null and pd.teamName != ''">
+					and a.teamName LIKE CONCAT(CONCAT('%', #{pd.teamName}),'%')
+				</if>
+				<if test="pd.teamMemo!= null and pd.teamMemo != ''">
+					and a.teamMemo  LIKE CONCAT(CONCAT('%', #{pd.teamMemo}),'%')
+				</if>
+				<if test="pd.createUserName!= null and pd.createUserName != ''">
+					and c.NAME  LIKE CONCAT(CONCAT('%', #{pd.createUserName}),'%')
+				</if>
+				<if test="pd.createTime!= null and pd.createTime != ''">
+					and a.createTime &gt; =#{pd.createTime}
+				</if>
+				<if test="pd.createTime2!= null and pd.createTime2 != ''">
+					and a.createTime &lt; =#{pd.createTime2}
+				</if>
+				<if test="pd.updateUserName!= null and pd.updateUserName != ''">
+					and d.NAME  LIKE CONCAT(CONCAT('%', #{pd.updateUserName}),'%')
+				</if>
+				<if test="pd.updateTime!= null and pd.updateTime != ''">
+					and a.updateTime &gt; =#{pd.updateTime}
+				</if>
+				<if test="pd.updateTime2!= null and pd.updateTime2 != ''">
+					and a.updateTime &lt; =#{pd.updateTime2}
+				</if>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		a.teamId,
+		a.teamCode,
+		a.teamName,
+		a.createUser,
+		a.createTime,
+		a.updateUser,
+		a.updateTime,
+		a.teamMemo,
+		c.Name as createUserName,
+		d.Name as updateUserName
+		from 
+		<include refid="tableName"></include>a
+		left join OA_STAFF c on a.createUser=c.STAFF_ID
+		left join OA_STAFF d on a.updateUser=d.STAFF_ID
+		where 1=1
+		<choose>
+			<when test="isAccurateQuery!= null and isAccurateQuery != '' and isAccurateQuery=='true'">
+				<if test="teamCode!= null and teamCode != ''">
+					and a.teamCode=#{teamCode}
+				</if>
+				<if test="teamName!= null and teamName != ''">
+					and a.teamName=#{teamName}
+				</if>
+				<if test="teamMemo!= null and teamMemo != ''">
+					and a.teamMemo=#{teamMemo}
+				</if>
+				<if test="createUserName!= null and createUserName != ''">
+					and c.NAME=#{createUserName}
+				</if>
+				<if test="createTime!= null and createTime != ''">
+					and a.createTime &gt; =#{createTime}
+				</if>
+				<if test="createTime2!= null and createTime2 != ''">
+					and a.createTime &lt; =#{createTime2}
+				</if>
+				<if test="updateUserName!= null and updateUserName != ''">
+					and d.NAME=#{updateUserName}
+				</if>
+				<if test="updateTime!= null and updateTime != ''">
+					and a.updateTime &gt; =#{updateTime}
+				</if>
+				<if test="updateTime2!= null and updateTime2 != ''">
+					and a.updateTime &lt; =#{updateTime2}
+				</if>
+			</when>
+			<otherwise >
+				 <if test="teamCode!= null and teamCode != ''">
+					and a.teamCode LIKE CONCAT(CONCAT('%', #{teamCode}),'%')
+				</if>
+				<if test="teamName!= null and teamName != ''">
+					and a.teamName LIKE CONCAT(CONCAT('%', #{teamName}),'%')
+				</if>
+				<if test="teamMemo!= null and teamMemo != ''">
+					and a.teamMemo  LIKE CONCAT(CONCAT('%', #{teamMemo}),'%')
+				</if>
+				<if test="createUserName!= null and createUserName != ''">
+					and c.NAME  LIKE CONCAT(CONCAT('%', #{createUserName}),'%')
+				</if>
+				<if test="createTime!= null and createTime != ''">
+					and a.createTime &gt; =#{createTime}
+				</if>
+				<if test="createTime2!= null and createTime2 != ''">
+					and a.createTime &lt; =#{createTime2}
+				</if>
+				<if test="updateUserName!= null and updateUserName != ''">
+					and d.NAME  LIKE CONCAT(CONCAT('%', #{updateUserName}),'%')
+				</if>
+				<if test="updateTime!= null and updateTime != ''">
+					and a.updateTime &gt; =#{updateTime}
+				</if>
+				<if test="updateTime2!= null and updateTime2 != ''">
+					and a.updateTime &lt; =#{updateTime2}
+				</if>
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			teamId in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UploadFileMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_uploadFile
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		upFileId,
+		tableName,
+		tableKeyValue,
+		filePath,	
+		fileRealName,
+		fileName,
+		fileSize,
+		fileType,
+		uploadTime,
+		userId,
+		staffId
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{upFileId},	
+		#{tableName},	
+		#{tableKeyValue},	
+		#{filePath},	
+		#{fileRealName},	
+		#{fileName},
+		#{fileSize},
+		#{fileType},
+		#{uploadTime},
+		#{userId},
+		#{staffId}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+		<include refid="tableName"></include>
+		(
+			upFileId,
+			tableName,
+			tableKeyValue,
+			filePath,	
+			fileRealName,
+			fileName,
+			fileSize,
+			fileType,
+			uploadTime,
+			userId,
+			staffId
+		) values 
+		(
+			#{upFileId},	
+			#{tableName},	
+			#{tableKeyValue},	
+			#{filePath},	
+			#{fileRealName},	
+			#{fileName},
+			#{fileSize},
+			#{fileType},
+			#{uploadTime},
+			#{userId},
+			#{staffId}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			upFileId = #{upFileId}
+	</delete>
+	
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		a.upFileId,
+		a.tableName,
+		a.tableKeyValue,
+		a.filePath,	
+		a.fileRealName,
+		a.fileName,
+		a.fileSize,
+		a.uploadTime,
+		a.userId,
+		a.staffId,
+		b.Name as updateStaffName
+		from 
+		<include refid="tableName"></include> a
+		left join OA_STAFF b on a.staffId=b.STAFF_ID
+		where 
+			a.upFileId = #{upFileId}
+	</select>
+	
+	
+	
+	<!-- 列表 -->
+	<select id="querylistPage" parameterType="page" resultType="pd">
+		select 
+		a.upFileId,
+		a.tableName,
+		a.tableKeyValue,
+		a.filePath,	
+		a.fileRealName,
+		a.fileName,
+		a.fileSize,
+		a.uploadTime,
+		a.userId,
+		a.staffId,
+		b.Name as updateStaffName
+		from 
+		<include refid="tableName"></include> a
+		left join OA_STAFF b on a.staffId=b.STAFF_ID
+		where 1=1
+		<choose>
+			<when test="pd.isAccurateQuery!= null and pd.isAccurateQuery != '' and pd.isAccurateQuery=='true'">
+				<if test="pd.tableName!= null and pd.tableName != ''">
+					and a.tableName=#{pd.tableName}
+				</if>
+				<if test="pd.tableKeyValue!= null and pd.tableKeyValue != ''">
+					and a.tableKeyValue=#{pd.tableKeyValue}
+				</if>
+				<if test="pd.filePath!= null and pd.filePath != ''">
+					and a.filePath=#{pd.filePath}
+				</if>
+				<if test="pd.fileName!= null and pd.fileName != ''">
+					and c.fileName=#{pd.fileName}
+				</if>
+				<if test="pd.uploadTime!= null and pd.uploadTime != ''">
+					and a.uploadTime &gt; =#{pd.uploadTime}
+				</if>
+				<if test="pd.uploadTime2!= null and pd.uploadTime2 != ''">
+					and a.uploadTime &lt; =#{pd.uploadTime2}
+				</if>
+				<if test="pd.updateStaffName!= null and pd.updateStaffName != ''">
+					and b.NAME=#{pd.updateStaffName}
+				</if>
+			</when>
+			<otherwise >
+				 <if test="pd.tableName!= null and pd.tableName != ''">
+					and a.tableName LIKE CONCAT(CONCAT('%', #{pd.tableName}),'%')
+				</if>
+				<if test="pd.tableKeyValue!= null and pd.tableKeyValue != ''">
+					and a.tableKeyValue LIKE CONCAT(CONCAT('%', #{pd.tableKeyValue}),'%')
+				</if>
+				<if test="pd.filePath!= null and pd.filePath != ''">
+					and a.filePath  LIKE CONCAT(CONCAT('%', #{pd.filePath}),'%')
+				</if>
+				<if test="pd.fileName!= null and pd.fileName != ''">
+					and c.NAME  LIKE CONCAT(CONCAT('%', #{pd.createUserName}),'%')
+				</if>
+				<if test="pd.uploadTime!= null and pd.uploadTime != ''">
+					and a.uploadTime &gt; =#{pd.uploadTime}
+				</if>
+				<if test="pd.uploadTime2!= null and pd.uploadTime2 != ''">
+					and a.uploadTime &lt; =#{pd.uploadTime2}
+				</if>
+				<if test="pd.updateStaffName!= null and pd.updateStaffName != ''">
+					and b.NAME  LIKE CONCAT(CONCAT('%', #{pd.updateStaffName}),'%')
+				</if>
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="downloadlistPage" parameterType="page" resultType="pd">
+		select 
+		a.upFileId,
+		a.tableName,
+		a.tableKeyValue,
+		a.filePath,	
+		a.fileRealName,
+		a.fileName,
+		a.fileSize,
+		case  a.fileType when 1 then '日常'  when 2 then '售前'  when 3 then '项目'   when 4 then '售后'   when 5 then '其他'  else '' end as fileTypeStr,
+		a.uploadTime,
+		a.userId,
+		a.staffId,
+		b.Name as updateStaffName
+		from 
+		<include refid="tableName"></include> a
+		left join OA_STAFF b on a.staffId=b.STAFF_ID
+		where 1=1 and a.tableName=#{pd.tableName} and a.tableKeyValue=#{pd.tableKeyValue}
+	</select>
+	
+	
+	<select id="downloadlistPageByStageId" parameterType="page" resultType="pd">
+		select 
+		a.upFileId,
+		a.tableName,
+		a.tableKeyValue,
+		a.filePath,	
+		a.fileRealName,
+		a.fileName,
+		a.fileSize,
+		a.uploadTime,
+		a.userId,
+		a.staffId,
+		b.Name as updateStaffName
+		from 
+		<include refid="tableName"></include> a
+		left join OA_STAFF b on a.staffId=b.STAFF_ID
+		where 1=1 and a.tableName=#{pd.tableName} and a.tableKeyValue in(select progressSubmitId from PT_progressSubmit where stageId=#{pd.stageId})
+	</select>
+	
+	
+	<select id="listByKey" parameterType="pd" resultType="pd">
+		select 
+		a.upFileId,
+		a.tableName,
+		a.tableKeyValue,
+		a.filePath,	
+		a.fileRealName,
+		a.fileName,
+		a.fileSize,
+		a.uploadTime,
+		CONVERT(varchar(100), a.uploadTime, 20) as uploadTimeStr,
+		a.userId,
+		a.staffId,
+		b.Name as updateStaffName
+		from 
+		<include refid="tableName"></include> a
+		left join OA_STAFF b on a.staffId=b.STAFF_ID
+		where 1=1 and a.tableName=#{tableName} and a.tableKeyValue=#{tableKeyValue}
+	</select>
+	
+	
+	<!-- 查询所有 -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select 
+		a.upFileId,
+		a.tableName,
+		a.tableKeyValue,
+		a.filePath,	
+		a.fileRealName,
+		a.fileName,
+		a.fileSize,
+		a.uploadTime,
+		a.userId,
+		a.staffId,
+		b.Name as updateStaffName
+		from 
+		<include refid="tableName"></include> a
+		left join OA_STAFF b on a.staffId=b.STAFF_ID
+		where 1=1 order by uploadTime desc
+	</select>
+	
+	
+	
+	<select id="listAllById" parameterType="String" resultType="pd">
+		select 
+		a.upFileId,
+		a.tableName,
+		a.tableKeyValue,
+		a.filePath,	
+		a.fileRealName,
+		a.fileName,
+		a.fileSize,
+		a.uploadTime,
+		a.userId,
+		a.staffId,
+		b.Name as updateStaffName
+		from 
+		<include refid="tableName"></include> a
+		left join OA_STAFF b on a.staffId=b.STAFF_ID
+		where 1=1 
+		and	upFileId in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+		 order by uploadTime desc
+	</select>
+	
+	
+	
+	<select id="listByKeyValue" parameterType="String" resultType="pd">
+		select 
+		a.upFileId,
+		a.tableName,
+		a.tableKeyValue,
+		a.filePath,	
+		a.fileRealName,
+		a.fileName,
+		a.fileSize,
+		a.uploadTime,
+		a.userId,
+		a.staffId,
+		b.Name as updateStaffName
+		from 
+		<include refid="tableName"></include> a
+		left join OA_STAFF b on a.staffId=b.STAFF_ID
+		where 1=1 and a.tableKeyValue in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+		order by a.uploadTime desc
+	</select>
+	
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			upFileId in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

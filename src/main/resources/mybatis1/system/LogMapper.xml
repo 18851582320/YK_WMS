@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LogMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_LOG
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		USERNAME,	
+		CZTIME,	
+		CONTENT,	
+		LOG_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+			#{USERNAME},	
+			#{CZTIME},	
+			#{CONTENT},	
+			#{LOG_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			LOG_ID = #{LOG_ID}
+	</delete>
+		
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			LOG_ID = #{LOG_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="querylistPage" parameterType="page" resultType="pd">
+		select
+		 a.USERNAME,	
+		 a.CZTIME,	
+		 a.CONTENT,	
+		 a.LOG_ID,
+		 c.NAME
+		from 
+		<include refid="tableName"></include> a
+		left join sys_user b on a.USERNAME=b.USERNAME
+		left join OA_STAFF c on b.USER_ID=c.USER_ID
+		where 1=1
+		<choose>
+			<when test="pd.isAccurateQuery!= null and pd.isAccurateQuery != '' and pd.isAccurateQuery=='true'">
+				<if test="pd.USERNAME!= null and pd.USERNAME != ''">
+					and a.USERNAME=#{pd.USERNAME}
+				</if>
+				<if test="pd.NAME!= null and pd.NAME != ''">
+					and c.NAME=#{pd.NAME}
+				</if>
+				<if test="pd.CONTENT!= null and pd.CONTENT != ''">
+					and a.CONTENT=#{pd.CONTENT}
+				</if>
+				<if test="pd.CZTIME!= null and pd.CZTIME != ''">
+					and a.CZTIME &gt; =#{pd.CZTIME}
+				</if>
+				<if test="pd.CZTIME2!= null and pd.CZTIME2 != ''">
+					and a.CZTIME &lt; =#{pd.CZTIME2}
+				</if>
+			</when>
+			<otherwise >
+				 <if test="pd.USERNAME!= null and pd.USERNAME != ''">
+					and a.USERNAME LIKE CONCAT(CONCAT('%', #{pd.USERNAME}),'%')
+				</if>
+				<if test="pd.NAME!= null and pd.NAME != ''">
+					and c.NAME LIKE CONCAT(CONCAT('%', #{pd.NAME}),'%')
+				</if>
+				<if test="pd.CONTENT!= null and pd.CONTENT != ''">
+					and a.CONTENT LIKE CONCAT(CONCAT('%', #{pd.CONTENT}),'%')
+				</if>
+				<if test="pd.CZTIME!= null and pd.CZTIME != ''">
+					and a.CZTIME &gt; =#{pd.CZTIME}
+				</if>
+				<if test="pd.CZTIME2!= null and pd.CZTIME2 != ''">
+					and a.CZTIME &lt; =#{pd.CZTIME2}
+				</if>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			LOG_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SmsMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_sms
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		smsId,
+		title,
+		content,
+		type,
+		keyValue,
+		toUser,	
+		fromUser,
+		sendTime,
+		isRead,
+		extendOne,
+		toUserAll
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{smsId},	
+		#{title},	
+		#{content},	
+		#{type},	
+		#{keyValue},	
+		#{toUser},	
+		#{fromUser},	
+		#{sendTime},
+		#{isRead},
+		#{extendOne},
+		#{toUserAll}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+		<include refid="tableName"></include>
+		(
+			smsId,
+			title,
+			content,
+			type,
+			keyValue,
+			toUser,	
+			fromUser,
+			isRead,
+			extendOne,
+			toUserAll
+		) values 
+		(
+			#{smsId},	
+			#{title},	
+			#{content},	
+			#{type},	
+			#{keyValue},	
+			#{toUser},	
+			#{fromUser},	
+			#{isRead},
+			#{extendOne},
+			#{toUserAll}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			smsId = #{smsId}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			isRead = #{isRead}
+		where 
+			smsId = #{smsId}
+	</update>
+	
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		a.smsId,
+		a.title,
+		a.content,
+		a.type,
+		a.keyValue,
+		a.toUser,	
+		a.fromUser,
+		CONVERT(varchar(100), a.sendTime, 20) as sendTime,
+		a.isRead,
+		a.extendOne,
+		a.toUserAll,
+		b.NAME as toUserName,
+		c.NAME as fromUserName
+		from SYS_sms a
+		left join OA_STAFF b on a.toUser=b.STAFF_ID
+		left join OA_STAFF c on a.fromUser=c.STAFF_ID
+		where a.smsId = #{smsId}
+	</select>
+	
+	
+	
+	<!-- 列表 -->
+	<select id="querylistPage" parameterType="page" resultType="pd">
+		select 
+		a.smsId,
+		a.title,
+		a.content,
+		a.type,
+		a.keyValue,
+		a.toUser,	
+		a.fromUser,
+		a.sendTime,
+		a.isRead,
+		a.extendOne,
+		a.toUserAll,
+		b.NAME as toUserName,
+		c.NAME as fromUserName
+		from SYS_sms a
+		left join OA_STAFF b on a.toUser=b.STAFF_ID
+		left join OA_STAFF c on a.fromUser=c.STAFF_ID
+		where 1=1 and a.fromUser=#{pd.fromUser}
+	</select>
+	
+	
+	<select id="queryNotRead" parameterType="page" resultType="pd">
+		select 
+		a.smsId,
+		a.title,
+		a.content,
+		a.type,
+		a.keyValue,
+		a.toUser,	
+		a.fromUser,
+		a.sendTime,
+		a.isRead,
+		a.extendOne,
+		a.toUserAll
+		from SYS_sms a
+		where 1=1 and a.toUser=#{toUser} and isRead=0;
+	</select>
+	
+	
+	
+	<select id="queryReceivelistPage" parameterType="page" resultType="pd">
+		select 
+		a.smsId,
+		isnull(a.title,'') as title,
+		isnull(a.content,'') as content,
+		a.type,
+		a.keyValue,
+		a.toUser,	
+		a.fromUser,
+		CONVERT(varchar(100), a.sendTime, 20) as sendTime,
+		a.isRead,
+		a.extendOne,
+		a.toUserAll,
+		b.NAME as toUserName,
+		c.NAME as fromUserName
+		from SYS_sms a
+		left join OA_STAFF b on a.toUser=b.STAFF_ID
+		left join OA_STAFF c on a.fromUser=c.STAFF_ID
+		where 1=1 
+			<if test="pd.toUser != null and pd.toUser != ''">
+				and a.toUser=#{pd.toUser}
+			</if>
+			<if test="pd.fromUser != null and pd.fromUser != ''">
+				and a.fromUser=#{pd.fromUser}
+			</if>
+			<if test="pd.isRead != null and pd.isRead != ''">
+				and a.isRead = #{pd.isRead}
+			</if>
+			<if test="pd.type != null and pd.type != ''">
+				and a.type = #{pd.type}
+			</if>
+	</select>
+	
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			smsId in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

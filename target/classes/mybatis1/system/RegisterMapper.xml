@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RegisterMapper">
+
+	<sql id="tableName">
+		SYS_register
+	</sql>
+
+	<sql id="Field">
+		registerId,
+		phone,
+		checkCode,
+		sendTime,
+		autoCreateTime
+	</sql>
+	
+	<sql id="FieldValue">
+		#{registerId},
+		#{phone},
+		#{checkCode},
+		#{sendTime},
+		#{autoCreateTime}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+		SYS_register
+		(
+			registerId,
+			phone,
+			checkCode,
+			sendTime
+		) values 
+		(
+			#{registerId},
+			#{phone},
+			#{checkCode},
+			#{sendTime}
+		)
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update SYS_register
+		set 
+			checkCode = #{checkCode},
+			sendTime = #{sendTime}
+		where 1=1 and registerId = #{registerId}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findByPhone" parameterType="pd" resultType="pd">
+		select 
+			a.registerId,
+			a.phone,
+			a.checkCode,
+			a.sendTime,
+			a.autoCreateTime,
+			datediff(mi,a.sendTime,GETDATE()) as differMinute
+		from SYS_register a
+		where 
+			a.phone = #{phone}
+	</select>
+	
+	<delete id="deleteByPhone" parameterType="pd">
+		delete from SYS_register
+		where 
+			phone = #{phone}
+	</delete>
+	
+	
+</mapper>

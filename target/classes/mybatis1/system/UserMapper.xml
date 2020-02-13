@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserMapper">
+
+	<resultMap type="User" id="userAndRoleResultMap">
+		<id column="USER_ID" property="USER_ID"/>
+		<result column="USERNAME" property="USERNAME"/>
+		<result column="PASSWORD" property="PASSWORD"/>
+		<result column="NAME" property="NAME"/>
+		<result column="RIGHTS" property="RIGHTS"/>
+		<result column="LAST_LOGIN" property="LAST_LOGIN"/>
+		<result column="IP" property="IP"/>
+		<result column="STATUS" property="STATUS"/>
+		<result column="SKIN" property="SKIN"/>
+		<result column="SKIN" property="SKIN"/>
+	</resultMap>
+	<resultMap type="User" id="userResultMap">
+		<id column="USER_ID" property="USER_ID"/>
+		<result column="USERNAME" property="USERNAME"/>
+		<result column="PASSWORD" property="PASSWORD"/>
+		<result column="NAME" property="NAME"/>
+		<result column="RIGHTS" property="RIGHTS"/>
+		<result column="LAST_LOGIN" property="LAST_LOGIN"/>
+		<result column="IP" property="IP"/>
+		<result column="STATUS" property="STATUS"/>
+		<result column="ROLE_ID" property="ROLE_ID"/>
+		<result column="SKIN" property="SKIN"/>
+		<result column="SKIN" property="SKIN"/>
+	</resultMap>
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_USER
+	</sql>
+	<sql id="roleTableName">
+		SYS_ROLE
+	</sql>
+	<sql id="staffTableName">
+		OA_STAFF
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		USER_ID,
+		USERNAME,
+		PASSWORD,
+		NAME,
+		RIGHTS,
+		ROLE_ID,
+		LAST_LOGIN,
+		IP,
+		STATUS,
+		BZ,
+		SKIN,
+		EMAIL,
+		NUMBER,
+		PHONE,
+		witSkin
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{USER_ID},
+		#{USERNAME},
+		#{PASSWORD},
+		#{NAME},
+		#{RIGHTS},
+		#{ROLE_ID},
+		#{LAST_LOGIN},
+		#{IP},
+		#{STATUS},
+		#{BZ},
+		#{SKIN},
+		#{EMAIL},
+		#{NUMBER},
+		#{PHONE},
+		#{witSkin}
+	</sql>
+	
+	<!-- 判断用户名和密码 -->
+	<select id="getUserInfo" parameterType="pd" resultType="pd">
+		select 
+		USER_ID,
+		USERNAME,
+		PASSWORD,
+		NAME,
+		RIGHTS,
+		ROLE_ID,
+		LAST_LOGIN,
+		IP,
+		STATUS,
+		BZ,
+		SKIN,
+		EMAIL,
+		NUMBER,
+		PHONE,
+		witSkin,
+		userLanguage 
+		from
+		<include refid="tableName"></include>
+		where 1=1
+		<if test="USERNAME!=null and PASSWORD!=null">
+		and USERNAME = #{USERNAME} and PASSWORD=#{PASSWORD}
+		</if>
+		<if test="USER_ID!=null and USER_ID>0">
+		and USER_ID = #{USER_ID}
+		</if>
+	</select>
+	
+	<!-- 更新登录时间 -->
+	<update id="updateLastLogin" parameterType="pd" >
+		update
+		<include refid="tableName"></include>
+		set 
+			LAST_LOGIN = #{LAST_LOGIN} 
+		where USER_ID = #{USER_ID}
+	</update>
+	
+	
+	
+	<!-- 通过USERNAME获取数据 -->
+	<select id="findByUsername" parameterType="pd" resultType="pd" >
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			USERNAME = #{USERNAME}
+	</select>
+	
+	<!-- 存入IP -->
+	<update id="saveIP" parameterType="pd" >
+		update 
+		<include refid="tableName"></include> 
+		set 
+			IP = #{IP}
+		where 
+			USERNAME = #{USERNAME}
+	</update>
+	
+	
+	<!-- 存入skin -->
+	<update id="saveSKIN" parameterType="pd" >
+		update 
+		<include refid="tableName"></include> 
+		set 
+			SKIN = #{SKIN}
+		where 
+			USER_ID = #{USER_ID}
+	</update>
+	
+	<!-- wit换肤 -->
+	<update id="saveWitSkin" parameterType="pd" >
+		update 
+		<include refid="tableName"></include> 
+		set 
+			witSkin = #{witSkin}
+		where 
+			USER_ID = #{USER_ID}
+	</update>
+	
+	
+	<update id="editRoleId" parameterType="pd" >
+		update 
+		<include refid="tableName"></include> 
+		set 
+			ROLE_ID = #{ROLE_ID}
+		where 
+			USER_ID = #{USER_ID}
+	</update>
+	
+	<!-- 列出某角色下的所有用户 -->
+	<select id="listAllUserByRoldId"  parameterType="pd" resultType="pd" >
+		select USER_ID
+		from 
+		<include refid="tableName"></include>
+		where 
+			ROLE_ID = #{ROLE_ID}
+	</select>
+	
+	<!-- 用户列表 -->
+	<select id="userlistPage" parameterType="page" resultType="pd" >
+		select  u.USER_ID,
+				u.USERNAME,
+				u.PASSWORD,
+				u.LAST_LOGIN,
+				u.NAME,
+				u.IP,
+				u.EMAIL,
+				u.NUMBER,
+				u.PHONE,
+				u.ROLE_ID
+		from <include refid="tableName"></include> u
+		where 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 u.USERNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 u.EMAIL LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					 or
+					 u.NUMBER LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or
+					 u.NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or
+					 u.PHONE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		<if test="pd.ROLE_ID != null and pd.ROLE_ID != ''"><!-- 角色检索 -->
+			and u.ROLE_ID=#{pd.ROLE_ID} 
+		</if>
+		<if test="pd.lastLoginStart!=null and pd.lastLoginStart!=''"><!-- 登录时间检索 -->
+			and u.LAST_LOGIN &gt;= #{pd.lastLoginStart} 
+		</if>
+		<if test="pd.lastLoginEnd!=null and pd.lastLoginEnd!=''"><!-- 登录时间检索 -->
+			and u.LAST_LOGIN &lt;= #{pd.lastLoginEnd} 
+		</if>
+	</select>
+	
+	
+	<!-- 用户列表 -->
+	<select id="querylistPage" parameterType="page" resultType="pd" >
+		select  u.USER_ID,
+				u.USERNAME,
+				u.PASSWORD,
+				u.LAST_LOGIN,
+				S.NAME,
+				u.IP,
+				u.EMAIL,
+				u.NUMBER,
+				u.PHONE,
+				u.ROLE_ID,
+				u.BZ
+		from <include refid="tableName"></include> u
+		left join <include refid="staffTableName"></include> s on s.USER_ID=u.USER_ID
+		where  u.USERNAME != 'admin' 
+		
+		<choose>
+			<when test="pd.isAccurateQuery!= null and pd.isAccurateQuery != '' and pd.isAccurateQuery=='true'">
+				<if test="pd.NUMBER!= null and pd.NUMBER != ''">
+					and u.NUMBER=#{pd.NUMBER}
+				</if>
+				<if test="pd.USERNAME!= null and pd.USERNAME != ''">
+					and u.USERNAME=#{pd.USERNAME}
+				</if>
+				<if test="pd.NAME!= null and pd.NAME != ''">
+					and s.NAME=#{pd.NAME}
+				</if>
+				<if test="pd.EMAIL!= null and pd.EMAIL != ''">
+					and u.EMAIL=#{pd.EMAIL}
+				</if>
+				<if test="pd.LAST_LOGIN!= null and pd.LAST_LOGIN != ''">
+					and u.LAST_LOGIN &gt;=#{pd.LAST_LOGIN}
+				</if>
+				<if test="pd.LAST_LOGIN2!= null and pd.LAST_LOGIN2 != ''">
+					and u.LAST_LOGIN &lt;=#{pd.LAST_LOGIN2}
+				</if>
+				<if test="pd.BZ!= null and pd.BZ != ''">
+					and u.BZ=#{pd.BZ}
+				</if>
+			</when>
+			<otherwise >
+				 <if test="pd.NUMBER!= null and pd.NUMBER != ''">
+					and u.NUMBER LIKE CONCAT(CONCAT('%', #{pd.NUMBER}),'%')
+				</if>
+				<if test="pd.USERNAME!= null and pd.USERNAME != ''">
+					and u.USERNAME LIKE CONCAT(CONCAT('%', #{pd.USERNAME}),'%')
+				</if>
+				<if test="pd.NAME!= null and pd.NAME != ''">
+					and s.NAME  LIKE CONCAT(CONCAT('%', #{pd.NAME}),'%')
+				</if>
+				<if test="pd.EMAIL!= null and pd.EMAIL != ''">
+					and u.EMAIL LIKE CONCAT(CONCAT('%', #{pd.EMAIL}),'%')
+				</if>
+				<if test="pd.LAST_LOGIN!= null and pd.LAST_LOGIN != ''">
+					and u.LAST_LOGIN &gt;=#{pd.LAST_LOGIN}
+				</if>
+				<if test="pd.LAST_LOGIN2!= null and pd.LAST_LOGIN2 != ''">
+					and u.LAST_LOGIN &lt;=#{pd.LAST_LOGIN2}
+				</if>
+				<if test="pd.BZ!= null and pd.BZ != ''">
+					and u.BZ LIKE CONCAT(CONCAT('%', #{pd.BZ}),'%')
+				</if>
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	
+	<!-- 用户列表(弹窗选择用) -->
+	<select id="userBystafflistPage" parameterType="page" resultType="pd" >
+		select  u.USER_ID,
+				u.USERNAME,
+				u.PASSWORD,
+				u.LAST_LOGIN,
+				u.IP,
+				u.EMAIL,
+				u.NUMBER,
+				u.PHONE,
+				u.ROLE_ID
+		from <include refid="tableName"></include> u
+		left join <include refid="staffTableName"></include> s on s.USER_ID=u.USER_ID
+		where  u.USERNAME != 'admin' 
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					 u.USERNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 u.EMAIL LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					 or
+					 u.NUMBER LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or
+					 u.NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or
+					 u.PHONE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		<if test="pd.ROLE_ID != null and pd.ROLE_ID != ''"><!-- 角色检索 -->
+			and u.ROLE_ID=#{pd.ROLE_ID} 
+		</if>
+		<if test="pd.lastLoginStart!=null and pd.lastLoginStart!=''"><!-- 登录时间检索 -->
+			and u.LAST_LOGIN &gt;= #{pd.lastLoginStart} 
+		</if>
+		<if test="pd.lastLoginEnd!=null and pd.lastLoginEnd!=''"><!-- 登录时间检索 -->
+			and u.LAST_LOGIN &lt;= #{pd.lastLoginEnd} 
+		</if>
+		and u.USERNAME not in (select s.USER_ID from <include refid="staffTableName"></include> s where s.USER_ID !='')
+	</select>
+	
+	<!-- 通过邮箱获取数据 -->
+	<select id="findByUE" parameterType="pd" resultType="pd" >
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			EMAIL = #{EMAIL}
+		<if test="USERNAME != null and USERNAME != ''">
+			and USERNAME != #{USERNAME} 
+		</if>
+	</select>
+	
+	<!-- 通过编号获取数据 -->
+	<select id="findByUN" parameterType="pd" resultType="pd" >
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			NUMBER = #{NUMBER}
+	</select>
+	
+	<!-- 通过user_id获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd" >
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			USER_ID = #{USER_ID}
+	</select>
+	
+	<!-- 新增用户 -->
+	<insert id="save" parameterType="pd" >
+		insert into <include refid="tableName"></include> (
+			<include refid="Field"></include>
+		) values (
+			<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	
+	<!-- 批量增加-->
+	<insert id="saveBatch" parameterType="java.util.List"  >	
+		insert into 
+			<include refid="tableName"></include>
+				(USER_ID,USERNAME,NUMBER,PASSWORD,ROLE_ID,EMAIL,BZ,STATUS,SKIN) 
+				values 
+			<foreach collection="list" item="item" index="index" separator="," >
+				(#{item.USER_ID},#{item.USERNAME},#{item.NUMBER},#{item.PASSWORD},#{item.ROLE_ID},#{item.EMAIL},#{item.EMAIL},#{item.STATUS},#{item.SKIN})
+			</foreach> 
+	 </insert>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd" >
+		update  <include refid="tableName"></include>
+			set	NAME 					= #{NAME},
+				ROLE_ID 				= #{ROLE_ID},
+				BZ					= #{BZ},
+				EMAIL					= #{EMAIL},
+				NUMBER				= #{NUMBER},
+				PHONE					= #{PHONE}
+			<if test="PASSWORD != null and PASSWORD != ''">
+				,PASSWORD				= #{PASSWORD}
+			</if>
+			where 
+				USER_ID = #{USER_ID}
+	</update>
+	
+	
+	<!-- 修改用户名-->
+	<update id="updatePwd" parameterType="pd" >
+		update 
+		<include refid="tableName"></include> 
+		set 
+			PASSWORD = #{PASSWORD}
+		where 
+			USER_ID = #{USER_ID}
+	</update>
+	
+	
+	<update id="updateLanguage" parameterType="pd" >
+		update 
+		<include refid="tableName"></include> 
+		set 
+			userLanguage = #{userLanguage}
+		where 
+			USER_ID = #{USER_ID}
+	</update>
+	
+	<!-- 删除用户 -->
+	<delete id="delete" parameterType="pd" flushCache="false">
+		delete from <include refid="tableName"></include>
+		where 
+			USER_ID = #{USER_ID}
+		and 
+			USER_ID != '1'
+	</delete>
+	
+	<!-- 批量删除用户 -->
+	<delete id="deleteAllU" parameterType="String" >
+		delete from <include refid="tableName"></include>
+		where 
+			USER_ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+        and 
+			USER_ID != '1'
+	</delete>
+	
+	<!-- 批量删除用户 -->
+	<delete id="deleteUserByStaffId" parameterType="String" >
+		delete a
+		from <include refid="tableName"></include> a
+		inner join OA_STAFF b on a.USER_ID=b.USER_ID
+		where 
+			b.STAFF_ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+        and 
+			a.USER_ID != '1'
+	</delete>
+	
+	<!-- 用户列表(全部) -->
+	<select id="listAllUser" parameterType="pd" resultType="pd" >
+		select  u.USER_ID,
+				u.USERNAME,
+				u.PASSWORD,
+				u.LAST_LOGIN,
+				S.NAME,
+				u.IP,
+				u.EMAIL,
+				u.NUMBER,
+				u.PHONE,
+				u.ROLE_ID,
+				u.BZ
+		from <include refid="tableName"></include> u
+		left join <include refid="staffTableName"></include> s on s.USER_ID=u.USER_ID
+		where  u.USERNAME != 'admin' 
+		
+		<choose>
+			<when test="isAccurateQuery!= null and isAccurateQuery != '' and isAccurateQuery=='true'">
+				<if test="NUMBER!= null and NUMBER != ''">
+					and u.NUMBER=#{NUMBER}
+				</if>
+				<if test="USERNAME!= null and USERNAME != ''">
+					and u.USERNAME=#{USERNAME}
+				</if>
+				<if test="NAME!= null and NAME != ''">
+					and s.NAME=#{NAME}
+				</if>
+				<if test="EMAIL!= null and EMAIL != ''">
+					and u.EMAIL=#{EMAIL}
+				</if>
+				<if test="LAST_LOGIN!= null and LAST_LOGIN != ''">
+					and u.LAST_LOGIN &gt;=#{LAST_LOGIN}
+				</if>
+				<if test="LAST_LOGIN2!= null and LAST_LOGIN2 != ''">
+					and u.LAST_LOGIN &lt;=#{LAST_LOGIN2}
+				</if>
+				<if test="BZ!= null and BZ != ''">
+					and u.BZ=#{BZ}
+				</if>
+			</when>
+			<otherwise >
+				 <if test="NUMBER!= null and NUMBER != ''">
+					and u.NUMBER LIKE CONCAT(CONCAT('%', #{NUMBER}),'%')
+				</if>
+				<if test="USERNAME!= null and USERNAME != ''">
+					and u.USERNAME LIKE CONCAT(CONCAT('%', #{USERNAME}),'%')
+				</if>
+				<if test="NAME!= null and NAME != ''">
+					and s.NAME  LIKE CONCAT(CONCAT('%', #{NAME}),'%')
+				</if>
+				<if test="EMAIL!= null and EMAIL != ''">
+					and u.EMAIL LIKE CONCAT(CONCAT('%', #{EMAIL}),'%')
+				</if>
+				<if test="LAST_LOGIN!= null and LAST_LOGIN != ''">
+					and u.LAST_LOGIN &gt;=#{LAST_LOGIN}
+				</if>
+				<if test="LAST_LOGIN2!= null and LAST_LOGIN2 != ''">
+					and u.LAST_LOGIN &lt;=#{LAST_LOGIN2}
+				</if>
+				<if test="BZ!= null and BZ != ''">
+					and u.BZ LIKE CONCAT(CONCAT('%', #{BZ}),'%')
+				</if>
+			</otherwise>
+		</choose>
+		 order by u.LAST_LOGIN desc
+	</select>
+	
+	
+	<!-- 用户（员工添加时选择） -->
+	<select id="listUserForStaff" parameterType="pd" resultType="pd" >
+		select  u.USER_ID,
+				u.USERNAME,
+				u.PASSWORD,
+				u.LAST_LOGIN,
+				S.NAME,
+				u.IP,
+				u.EMAIL,
+				u.NUMBER,
+				u.PHONE,
+				u.ROLE_ID,
+				u.BZ
+		from <include refid="tableName"></include> u
+		left join <include refid="staffTableName"></include> s on s.USER_ID=u.USER_ID
+		where  u.USERNAME != 'admin' 
+	</select>
+	
+	<!-- 获取总数 -->
+	<select id="getUserCount" parameterType="String" resultType="pd">
+		select 
+			count(USER_ID) userCount
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	
+</mapper>

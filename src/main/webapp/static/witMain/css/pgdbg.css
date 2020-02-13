@@ -1,0 +1,186 @@
+body{ font-family: "微软雅黑";  }
+.all.inside{padding: 0;}
+
+.content{position: relative;}
+.content .content-main .cm-box{border: 1px solid #e9e9e9; position: relative;background-color:#eaeaf1;}
+
+.left-bt{position: absolute; left: 0; top: 0; width: 270px;height: 100%; padding: 1px 10px 10px 10px; padding-right: 0; overflow: auto;box-sizing: border-box; }
+.left-bt h1 i.fa-list-ul{margin:5px 6px 10px 5px ; }
+.left-bt h1{font-size: 18px;height: 40px; font-weight: 600; padding: 15px 0; }
+.left-bt ul{overflow: auto; padding-right: 10px;}
+.left-bt ul li { background-color: #f3f3f3; margin-bottom: 10px; padding-top: 10px; padding-bottom: 10px;}
+.left-bt ul li:hover{ background-color: #055B98;}
+.left-bt ul li.active{background-color: #055B98; }
+.left-bt ul li.active p label{ color: #fff;}
+.left-bt ul li.active p span{ color: #fff;}
+.left-bt ul li:hover p label{ color: #fff;}
+.left-bt ul li:hover p span{ color: #fff;}
+.left-bt ul li p{ line-height: 24px; font-size: 12px;}
+.left-bt ul li p label{ display: inline-block; width: 80px; text-align: right; margin-right: 5px; vertical-align: top; color: #000;}
+.left-bt ul li p span{ width: 135px; display: inline-block; color: #646464;}
+
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar
+{
+    width: 20px;
+    height: 15px;
+    background-color: #F5F5F5;
+}
+ 
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
+    border-radius: 0px;
+    background-color: #F5F5F5;
+}
+ 
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb
+{
+    border-radius: 15px;
+    -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,.3);
+    background-color: #dedede;
+}
+
+.all .content-main .cm-box .mid-content{ padding-left: 280px; padding-top: 10px;}
+.all .content-main .cm-box .mid-content .mid-pPreparateCode { float: left; height: 45px;background-color: #cecef9;  width: 99%; border-bottom: 1px solid #DADADA; }
+.all .content-main .cm-box .mid-content .mid-pPreparateCode label{display: inline-block ; font-size: 14px; color: #000000; width: 7vw; text-align: right;}
+.all .content-main .cm-box .mid-content .mid-pPreparateCode input{ height: 30px; width: 18vw; border: 1px solid #dadada;}
+.all .content-main .cm-box .mid-content .mid-pPreparateCode button{ background-color: #5bc0de; color: #fff; border: none; font-size: 16px;width: 5vw; text-align: center; margin:7px 7px 7px 7px ;padding-top: 6px ;padding-bottom: 6px ; border-radius: 3px;} 
+.all .content-main .cm-box .mid-content .mid-pPreparateCode button:hover{ background-color: #ed7f24;}
+
+.all .content-main .cm-box .mid-content .mid-bd { float: left; height: 44vh; width: 60%;margin-top: 2vh; border-bottom: 1px solid #DADADA; overflow: auto;}
+.all .content-main .cm-box .mid-content .mid-bd ul li{ line-height: 50px;}
+.all .content-main .cm-box .mid-content .mid-bd ul li label{display: inline-block ; font-size: 14px; color: #000000; width: 7vw; text-align: right;}
+.all .content-main .cm-box .mid-content .mid-bd ul li input{ height: 30px; width: 18vw; border: 1px solid #dadada;}
+.table-bordered {
+    border: 1px solid #0098d9;
+    border-collapse: separate;
+    border-left: 0;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+table {
+    max-width: 100%;
+    background-color: transparent;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.table-bordered thead:first-child tr:first-child>th:first-child, .table-bordered tbody:first-child tr:first-child>td:first-child, .table-bordered tbody:first-child tr:first-child>th:first-child {
+    -webkit-border-top-left-radius: 4px;
+    border-top-left-radius: 4px;
+    -moz-border-radius-topleft: 4px;
+}
+.table-bordered caption+thead tr:first-child th, .table-bordered caption+tbody tr:first-child th, .table-bordered caption+tbody tr:first-child td, .table-bordered colgroup+thead tr:first-child th, .table-bordered colgroup+tbody tr:first-child th, .table-bordered colgroup+tbody tr:first-child td, .table-bordered thead:first-child tr:first-child th, .table-bordered tbody:first-child tr:first-child th, .table-bordered tbody:first-child tr:first-child td {
+    border-top: 0;
+}
+.table caption+thead tr:first-child th, .table caption+thead tr:first-child td, .table colgroup+thead tr:first-child th, .table colgroup+thead tr:first-child td, .table thead:first-child tr:first-child th, .table thead:first-child tr:first-child td {
+    border-top: 0;
+}
+.table thead th {
+    vertical-align: bottom;
+
+}
+
+.table-bordered th, .table-bordered td {
+    border-left: 1px solid #8B0000;
+}
+.table th, .table td {
+    padding: 8px;
+    line-height: 35px;
+    text-align: center;
+    vertical-align: middle;
+    border-top: 1px solid #8B0000;
+    background-color:#008B8B;
+    font-size: 20px;
+     color:#ddd;
+}
+.table th {
+    font-weight: bold;
+    background-color: #0098d9;
+    border-left: 1px solid #8B0000;
+     font-size: 20px;
+     color:#ddd;
+}
+
+@media (min-width: 1300px) and (max-width: 1920px) {
+  .all .content-main .cm-box .mid-content .mid-bd ul li label{width: 7vw;}
+  .all .content-main .cm-box .mid-content .mid-bd ul li input{width: 17vw;}
+  .all .content-main .cm-box .mid-content .mid-pPreparateCode label{width: 7vw;}
+  .all .content-main .cm-box .mid-content .mid-pPreparateCode input{width: 17vw;}
+}
+@media (min-width: 980px) and (max-width: 1300px) {
+  .all .content-main .cm-box .mid-content .mid-bd ul li label{width: 6.5vw;}
+  .all .content-main .cm-box .mid-content .mid-bd ul li input{width: 14vw;}
+  .all .content-main .cm-box .mid-content .mid-pPreparateCode label{width: 6.5vw;}
+  .all .content-main .cm-box .mid-content .mid-pPreparateCode input{width: 14vw;}
+}
+@media (min-width: 760px) and (max-width: 980px) {
+  .all .content-main .cm-box .mid-content .mid-bd ul li label{width: 6vw;}
+  .all .content-main .cm-box .mid-content .mid-bd ul li input{width: 9vw;}
+  .all .content-main .cm-box .mid-content .mid-pPreparateCode label{width: 6vw;}
+  .all .content-main .cm-box .mid-content .mid-pPreparateCode input{width: 9vw;}
+}
+.all .content-main .cm-box .mid-content .mid-btns{ width: 39%; height: 44vh; margin-top: 2vh;float: left; border-bottom: 1px solid #DADADA; overflow: auto;}
+.all .content-main .cm-box .mid-content .mid-btns ul li { float: left; width:50%; line-height: 8vh; text-align: center;}
+.all .content-main .cm-box .mid-content .mid-btns ul li button{ background-color: #5bc0de; color: #fff; border: none; width: 90%; text-align: center; padding-top: 2.1vh ;padding-bottom: 2.1vh ;   border-radius: 3px;} 
+.all .content-main .cm-box .mid-content .mid-btns ul li button:hover{ background-color: #ed7f24;}
+
+
+.all .content-main .cm-box .mid-content .mid-down-left{ float: left;height: 44.2vh; width: 45%; overflow: auto; margin-top: 2vh;/*border-right: 1px solid #DADADA;*/}
+.all .content-main .cm-box .mid-content .mid-down-left ul li{ line-height: 50px;}
+.all .content-main .cm-box .mid-content .mid-down-left ul li.btn{ text-align: center;}
+.all .content-main .cm-box .mid-content .mid-down-left ul li.btn-li{ text-align: center;}
+.all .content-main .cm-box .mid-content .mid-down-left ul li.btn-li a.new-btns{display: inline-block; margin-top: 20px; background-color: #ED7F24; color: #fff; font-size: 14px; border: none;width: 10vw;text-align: center;}
+.all .content-main .cm-box .mid-content .mid-down-left ul li label{display: inline-block ; font-size: 16px; color: #000000; width: 7vw; text-align: right;}
+.all .content-main .cm-box .mid-content .mid-down-left ul li input{ height: 30px; width: 18vw; border: 1px solid #dadada;}
+@media (min-width: 1300px) and (max-width: 1920px) {
+  .all .content-main .cm-box .mid-content .mid-down-left ul li label{width: 7vw;}
+  .all .content-main .cm-box .mid-content .mid-down-left ul li input{width: 17vw;}
+}
+@media (min-width: 980px) and (max-width: 1300px) {
+  .all .content-main .cm-box .mid-content .mid-down-left ul li label{width: 6.5vw;}
+  .all .content-main .cm-box .mid-content .mid-down-left ul li input{width: 14vw;}
+}
+@media (min-width: 760px) and (max-width: 980px) {
+  .all .content-main .cm-box .mid-content .mid-down-left ul li label{width: 6vw;}
+  .all .content-main .cm-box .mid-content .mid-down-left ul li input{width: 9vw;}
+}
+.all .content-main .cm-box .mid-content .mid-down-btns{ float: left;width: 54%; height: 44.2vh; margin-top: 2vh; overflow: auto;box-sizing: border-box;}
+.all .content-main .cm-box .mid-content .mid-down-btns ul li { float: left; width: 33.333333%; line-height: 8vh; text-align: center;}
+.all .content-main .cm-box .mid-content .mid-down-btns ul li button{ background-color: #337ab7;  color: #fff; border: none;width: 90%;text-align: center; padding-top: 2.1vh ;padding-bottom: 2.1vh ;  border-radius: 3px;} 
+
+.all .content-main .cm-box .mid-content .mid-down-btns ul li button:hover{ background-color: #ed7f24;}
+
+@media (min-width: 1000px) and (max-width: 1300px) {
+  
+  .left-bt{ width: 220px;}
+  .left-bt ul li p span{ width: 100px;}
+  .left-bt ul li p label{ width: 73px;}
+  .all .content-main .cm-box .mid-content{ padding-left: 222px; }
+
+}
+
+@media (min-width: 760px) and (max-width: 1000px) {
+
+  .left-bt{ width: 200px;}
+  .left-bt ul li p span{ width: 80px;}
+  .left-bt ul li p label{ width: 73px;}
+  .all .content-main .cm-box .mid-content{ padding-left: 204px; }
+  .all .content-main .cm-box .mid-content .mid-bd ul li label,
+  .all .content-main .cm-box .mid-content .mid-down-left ul li label{ width: 6em; font-size: 12px;}
+  .all .content-main .cm-box .mid-content .mid-bd ul li input,
+  .all .content-main .cm-box .mid-content .mid-down-left ul li input{ width: 9vw;}
+  .all .content-main .cm-box .mid-content .mid-btns ul li button{font-size: 12px;}
+  .all .content-main .cm-box .mid-content .mid-down-left,
+  .all .content-main .cm-box .mid-content .mid-down-btns{height: 39vh;}
+  .all .content-main .cm-box .mid-content .mid-down-btns ul li button{font-size: 12px;}
+}
+.clearfix_after:after {content:"."; display:block; height:0; clear:both; visibility:hidden;}
+.content .content-main.inside{padding-right: 0; overflow: hidden;}

@@ -1,0 +1,16 @@
+.mid{ display: flex; justify-content: space-between; margin-left:20px; margin-right: 20px; margin-top: 20px;}
+.box{ background-color: #6a990d;   border-radius:6px; color: #FFFFFF; font-size: 18px; width: 42%; padding-left: 20px; padding-top: 12px; padding-bottom: 12px; 
+padding-right: 20px; box-shadow:2px 3px 8px #acacac;}
+.box span{ padding-right: 10px; vertical-align:-10px;}
+.box a{ color: #62940f; display: inline-block; background-color: #ffffff; border-left: 1px solid #fff; padding-left: 10px; float: right;
+ border-radius:20px; font-weight: 600; padding-left: 20px; padding-right: 20px; padding-top: 10px; padding-bottom: 10px;}
+.box a:hover{ background-color: #9ec93c;color: #FFFFFF;}
+
+
+.box-red{ background-color: #d51719;   border-radius:6px; color: #FFFFFF; font-size: 18px; width: 42%; padding-left: 20px; padding-top: 12px; padding-bottom: 12px;
+ padding-right: 20px; box-shadow:2px 3px 8px #acacac;}
+.box-red span{ padding-right: 10px; vertical-align:-10px;}
+.box-red a{ color: #d51719; display: inline-block; background-color: #ffffff; border-left: 1px solid #fff; padding-left: 10px; float: right;
+ border-radius:20px; font-weight: 600; padding-left: 20px; padding-right: 20px; padding-top: 10px; padding-bottom: 10px;}
+.box-red a:hover{ background-color: #f74b4b;color: #FFFFFF;}
+

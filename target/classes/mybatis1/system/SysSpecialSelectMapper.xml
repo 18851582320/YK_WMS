@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysSpecialSelectMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_sysDataSpecialSelect
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		speSelectId,
+		sysDataIndex,
+		sysDataDeFieldCode,
+		speSelectValue,
+		speSelectText,
+		speSelectDemo	
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{speSelectId},	
+		#{sysDataIndex},	
+		#{sysDataDeFieldCode},	
+		#{speSelectValue},	
+		#{speSelectText},
+		#{speSelectDemo}
+	</sql>
+	
+	<!-- 特殊的下拉列表 -->
+	<select id="specialSelect" parameterType="pd" resultType="pd">
+		select
+			speSelectValue,
+			speSelectText
+		from 
+		<include refid="tableName"></include>
+		where sysDataIndex=#{sysDataIndex} and sysDataDeFieldCode=#{sysDataDeFieldCode}
+	</select>
+	
+</mapper>
